@@ -1,0 +1,101 @@
+
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,500,600,700');
+
+body,div,h1,h2,h3,h4,h5,ul {
+	padding: 0;
+	margin: 0;
+}
+
+p {
+	font-family:"Work Sans", "Helvetica Neue", Helvetica, sans-serif;
+	font-weight: 400;
+	font-size: 12px;
+}
+
+#header,#intro,#pic,#footer {
+	max-width: 820px;
+	margin: 0 auto;
+	font-family:"Work Sans";
+}
+
+#hh{
+	background-color: black;
+}
+
+#header{
+	padding-top: 41px;
+	padding-bottom: 41px;
+}
+#header a {
+	color: white;
+	text-decoration: none;
+}
+
+#logo{
+	display: inline;
+	float:left;
+	 font-size: 14px;
+	 text-align:center;
+	 text-transform: uppercase;
+	 letter-spacing: 2px;
+}
+
+#nav_link_container{
+	float:right;
+	font-size: 14px;
+	font-weight: 550;
+}
+#nav_chat:hover {
+	border-bottom: 3px solid lightgray;
+}
+
+#nav_chat{
+	display:inline;
+	margin-right: 40px;
+}
+#nav_search:hover {
+	border-bottom: 3px solid lightgray;
+}
+
+#nav_search{
+	display:inline;
+	margin-right: 40px;
+}
+#nav_setting:hover {
+	border-bottom: 3px solid lightgray;
+}
+
+#nav_setting{
+	display:inline;
+}
+.selected{
+	border-bottom: 3px solid orange;
+}
+
+#intro{
+	background-color: lightgray;
+}
+#intro_content{
+    position: relative;
+    text-align: left;
+}
+
+#intro_heading{
+    left: 0px;
+    font-size: 40px;
+    width: 450px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+#intro_paragraph, #intro_paragraph2, #intro_paragraph3, #intro_paragraph4{
+    left: 0px;
+    font-size: 16px;
+    line-height: 22px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#msg_to_send{
+	position: absolute;
+	right: 0px;
+}
