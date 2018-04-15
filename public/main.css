@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+	font-family: Roboto, sans-serif;
+}
+
+.content {
+	width: 60%;
+	text-align: center;
+	margin: 0 auto;
+	padding-bottom: 80px;
+}
+
+
+
+/* room.html */
+
+#messageField {
+	width: 100%;
+	padding: 5px;
+	margin: 10px 0;
+}
+
+#submitButton {
+	padding: 5px 20px;
+}
+
+#usertitle {
+	margin: 10px 0 5px 0;
+}
+
+#users {
+	padding: 0;
+	margin: 0;
+}
+
+.user {
+	list-style: none;
+	margin: 5px 0;
+}
+
+#changeNameButton {
+	padding: 5px 10px;
+	margin: 10px;
+}
+
+#messages li {
+	list-style: none;
+	margin: 10px;
+}
+
+.username {
+	margin-bottom: 0px;
+	font-size: 16px;
+	text-align: left;
+	margin-left: 10px;
+}
+
+.message {
+	border: 1px solid black;
+	padding: 10px;
+	margin-top: 0px;
+	border-radius: 10px;
+	text-align: left;
+}
+
+.messageInput {
+	position: fixed;
+	bottom: 20px;
+	width: 60%;
+}
+
+
+
+/* index.html */
+
+.chat_options {
+	text-decoration: none;
+	padding: 10px;
+	background-color: lightgray;
+	width: 50%;
+	margin: 0 auto;
+	border-radius: 5px;
+}
+
+.chat_links {
+	text-decoration: none;
+	color: black;
+}
+
+#title {
+	padding: 10px;
+	margin-top: 200px;
+}
