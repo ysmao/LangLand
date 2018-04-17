@@ -1,3 +1,6 @@
+// TODO: organize this better (use security lab server as example)
+// TODO: move database stuff out of this file like how security lab is setup
+
 var colors = require('colors');
 var http = require('http');
 var express = require('express');
@@ -61,12 +64,13 @@ app.get('*', function(request, response) {
 });
 
 
-function saveMessage(roomName, nickname, message, time) {
-	conn.query('INSERT INTO messages (room, nickname, body, time) VALUES($1, $2, $3, $4)', [roomName, nickname, message, time], function(error, data) {
-		if (error) {
-			console.error('ERROR: could not add message to table');
-		}
-	});
+function saveMessage(chat, username, message, time) {
+	// below is old code for realtime
+	// conn.query('INSERT INTO messages (room, nickname, body, time) VALUES($1, $2, $3, $4)', [roomName, nickname, message, time], function(error, data) {
+	// 	if (error) {
+	// 		console.error('ERROR: could not add message to table');
+	// 	}
+	// });
 }
 
 // function generateRoomIdentifier() {
