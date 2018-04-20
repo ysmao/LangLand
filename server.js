@@ -4,19 +4,21 @@
 var colors = require('colors');
 var http = require('http');
 var express = require('express');
+var exphbs = require('express-handlebars');
 var bodyParser = require('body-parser');
 var anyDB = require('any-db');
 var engines = require('consolidate');
-var conn = anyDB.createConnection('sqlite3://chatroom.db');
+var conn = anyDB.createConnection('sqlite3://langland.db');
 
 var app = express();
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
-app.engine('html', engines.hogan);
-app.set('views', __dirname + '/templates');
-app.set('view engine', 'html');
+
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 app.use(express.static(__dirname + '/templates'));
 app.use(express.static(__dirname + '/public'));
@@ -49,18 +51,8 @@ conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOIN
 
 
 // index
-app.get('', function(request, response) {
-	response.render('index.html');
-});
-
-// login
-app.get('/login', function(request, response) {
-	response.render('login.html');
-});
-
-// 404
-app.get('*', function(request, response) {
-	response.render('error.html');
+app.get('/', function(request, response) {
+	response.render('home');
 });
 
 
