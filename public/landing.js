@@ -1,7 +1,6 @@
 $(document).ready(function() {
 	$('#signup_form').submit(function(event) {
 		event.preventDefault();
-		alert('signup submitted');
 
 		var username = $('#signup_username').val();
 	    var password = $('#signup_password').val();
@@ -17,7 +16,6 @@ $(document).ready(function() {
 
 	$('#login_container').submit(function(event) {
 		event.preventDefault();
-		alert('login submitted');
 
 		var username = $('#login_username').val();
 	    var password = $('#login_password').val();
