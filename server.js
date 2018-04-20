@@ -72,6 +72,10 @@ app.get('/chats', function(request, response) {
 	response.render('chats', data);
 });
 
+app.get('/landing', function(request, response) {
+	response.render('landing');
+});
+
 app.get('/', function(req, res, next) {
 	var username = req.session.username;
 	if (username) {
