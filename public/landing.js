@@ -23,7 +23,7 @@ $(document).ready(function() {
 		$.post('/login', {username, password}, function(res){
 	        //you might want to add callback function that is executed post request success
 	        if (res == "success") {
-	        	window.location.href = '/chats';
+	        	window.location.href = '/chatlist';
 	        }
 	    });
 	});
