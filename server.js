@@ -28,6 +28,7 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/image_resources'));
 
 // create tables
 conn.query('CREATE TABLE IF NOT EXISTS messages (message_id INTEGER PRIMARY KEY AUTOINCREMENT, chat_id INTEGER, username TEXT, body TEXT, time INTEGER)', function(error, data) {
@@ -57,6 +58,20 @@ conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOIN
 
 
 // index
+app.get('/friends', function(request, response) {
+	var data = {
+		"friendName": "Jeff",
+		"chats": ["Rita", "Beatriz", "Yunshu"],
+		"friends": ["Bob", "Alice"],
+		"user": {
+			"userName": "Send Help",
+			"age": 200,
+			"gender": "mystery"
+		}
+	};
+	response.render('chats', data);
+});
+
 app.get('/', function(req, res, next) {
 	res.render('landing');
 });
