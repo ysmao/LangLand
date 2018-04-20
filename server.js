@@ -72,6 +72,10 @@ app.get('/friends', function(request, response) {
 	response.render('chats', data);
 });
 
+app.get('/landing', function(request, response) {
+	response.render('landing');
+});
+
 app.get('/', function(req, res, next) {
 	var sessData = req.session;
 	sessData.someAttribute = "foo";
