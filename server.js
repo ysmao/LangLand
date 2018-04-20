@@ -5,6 +5,7 @@ var colors = require('colors');
 var http = require('http');
 var express = require('express');
 var exphbs = require('express-handlebars');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var anyDB = require('any-db');
 var engines = require('consolidate');
@@ -16,6 +17,12 @@ var io = require('socket.io').listen(server);
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+app.use(session({
+	secret: 'langland-secret-token',
+	cookie: {
+		maxAge: 600000
+	}
+}));
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
@@ -50,8 +57,10 @@ conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOIN
 
 
 // index
-app.get('/', function(request, response) {
-	response.render('home');
+app.get('/', function(req, res, next) {
+	var sessData = req.session;
+	sessData.someAttribute = "foo";
+	res.render('home');
 });
 
 
