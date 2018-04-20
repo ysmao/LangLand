@@ -36,7 +36,7 @@ conn.query('CREATE TABLE IF NOT EXISTS messages (message_id INTEGER PRIMARY KEY 
 		console.log(error);
 	}
 });
-conn.query('CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)', function(error, data) {
+conn.query('CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT)', function(error, data) {
 	if (error) {
 		console.log(error);
 	}
@@ -82,15 +82,11 @@ app.post('/signup', saveUser);
 // login
 app.post('/login', loginUser);
 
-app.get('/chats', function(req, res, next) {
-	res.render('chats');
-});
-
 
 function saveUser(req, res, next) {
-	var username = request.body.username;
-	var password = request.body.password;
-	var email = request.body.email;
+	var username = req.body.username;
+	var password = req.body.password;
+	var email = req.body.email;
 
 	conn.query('INSERT INTO users (username, password, email) VALUES($1, $2, $3)', [username, password, email], function(err, data) {
 		if (err) {
@@ -104,10 +100,8 @@ function saveUser(req, res, next) {
 }
 
 function loginUser(req, res, next) {
-	var username = request.body.username;
-	var password = request.body.password;
-
-	console.log(username + " " + password);
+	var username = req.body.username;
+	var password = req.body.password;
 
 	conn.query('SELECT * FROM users WHERE username=$1 AND password=$2', [username, password], function(err, data) {
 		if (err) {
@@ -116,8 +110,9 @@ function loginUser(req, res, next) {
 		} else if (data.rows) {
 			var sessData = req.session;
 			sessData.username = username;
-			res.redirect('/chats');
+			res.send("success");
 		} else {
+			console.log("uhh");
 			res.send("failure");
 		}
 	});
