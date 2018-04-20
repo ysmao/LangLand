@@ -36,7 +36,7 @@ conn.query('CREATE TABLE IF NOT EXISTS messages (message_id INTEGER PRIMARY KEY 
 		console.log(error);
 	}
 });
-conn.query('CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)', function(error, data) {
+conn.query('CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT)', function(error, data) {
 	if (error) {
 		console.log(error);
 	}
@@ -77,11 +77,50 @@ app.get('/landing', function(request, response) {
 });
 
 app.get('/', function(req, res, next) {
-	var sessData = req.session;
-	sessData.someAttribute = "foo";
-	res.render('home');
+	res.render('landing');
 });
 
+// signup
+app.post('/signup', saveUser);
+
+// login
+app.post('/login', loginUser);
+
+
+function saveUser(req, res, next) {
+	var username = req.body.username;
+	var password = req.body.password;
+	var email = req.body.email;
+
+	conn.query('INSERT INTO users (username, password, email) VALUES($1, $2, $3)', [username, password, email], function(err, data) {
+		if (err) {
+			console.error(err);
+		} else {
+			console.log(data.rows);
+		}
+	});
+
+	res.send("success");
+}
+
+function loginUser(req, res, next) {
+	var username = req.body.username;
+	var password = req.body.password;
+
+	conn.query('SELECT * FROM users WHERE username=$1 AND password=$2', [username, password], function(err, data) {
+		if (err) {
+			res.send("error");
+			console.error(err);
+		} else if (data.rows) {
+			var sessData = req.session;
+			sessData.username = username;
+			res.send("success");
+		} else {
+			console.log("uhh");
+			res.send("failure");
+		}
+	});
+}
 
 function saveMessage(chat, username, message, time) {
 	// below is old code for realtime

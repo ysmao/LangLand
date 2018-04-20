@@ -9,8 +9,8 @@
 	      crossorigin="anonymous">
 	    </script>
 	    <script src="frontend.js"></script>
-	    <link rel="stylesheet" type="text/css" href="style.css" />
-
+	    <script src="landing.js"></script>
+	    <link rel="stylesheet" type="text/css" href="style.css"/>
         <title>LangLand</title>
 	</head>
 
@@ -27,30 +27,26 @@
 					<ul class="text_fields" id="login_fields">
 						<li class="entry">
 							<span>Username: </span>
-							<input type="text"></li>
+							<input type="text" id="login_username">
 						</li>
 						<li class="entry">
 							<span>Password: </span>
-							<input type="password"></li>
+							<input type="password" id="login_password">
 						</li>
 					</ul>
-					<input type="submit" class="landing_button" value="Login"/>
+					<input type="submit" class="landing_button" value="Login" id="login_submit" />
 				</form>
 
 				<form id="signup_form" action="">
 					<div class="form_container" id="signup_pt_one">
 						<ul class="text_fields" id="signup_fields_one">
 							<li class="entry">
-								<span>Name: </span>
-								<input type="text">
-							</li>
-							<li class="entry">
-								<span>Nickname: </span>
-								<input type="text">
+								<span>Username: </span>
+								<input type="text" id="signup_username" >
 							</li>
 							<li class="entry">
 								<span>Password: </span>
-								<input type="password">
+								<input type="password" id="signup_password">
 							</li>
 							<li class="entry">
 								<span>Confirm Password: </span>
@@ -58,7 +54,7 @@
 							</li>
 							<li class="entry">
 								<span>Email: </span>
-								<input type="text">
+								<input type="text" id="signup_email" >
 							</li>
 						</ul>
 						<button class="landing_button" id="signup_next" onclick="displaySignupTwo()" type="button">Next</button>
@@ -131,7 +127,7 @@
 						</ul>
 						<div id="buttons_container">
 							<button class="landing_button" id="signup_prev" type="button" onclick="displaySignupOne()">Previous</button>
-							<input type="submit" class="landing_button" value="Sign Up"/>
+							<input type="submit" class="landing_button" value="Sign Up" id="signup_submit" />
 						</div>
 					</div>
 				</form>
