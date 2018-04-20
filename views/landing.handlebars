@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+        <link rel="stylesheet" href="../css/style.css" />
+        <script
+	      src="https://code.jquery.com/jquery-3.1.1.min.js"
+	      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	      crossorigin="anonymous">
+	    </script>
+	    <script src="frontend.js"></script>
+	    <script src="server.js"></script>
+	    <link rel="stylesheet" type="text/css" href="style.css" />
+
+        <title>LangLand</title>
+	</head>
+
+	<body>
+		<div id="landing_container">
+			<h1 id="logo">LangLand</h1>
+			<div id="landing_content">
+				<div id="landing_buttons">
+					<button class="landing_button_large" id="signup_option" onclick="displaySignupOne()">Sign Up</button>
+					<button class="landing_button_large" id="login_option" onclick="displayLogin()">Login</button>
+				</div>
+
+				<form class="form_container" id="login_container" action="">
+					<ul class="text_fields" id="login_fields">
+						<li class="entry">
+							<span>Username: </span>
+							<input type="text"></li>
+						</li>
+						<li class="entry">
+							<span>Password: </span>
+							<input type="text"></li>
+						</li>
+					</ul>
+					<input type="submit" class="landing_button" value="Login"/>
+				</form>
+
+				<form id="signup_form" action="">
+					<div class="form_container" id="signup_pt_one">
+						<ul class="text_fields" id="signup_fields_one">
+							<li class="entry">
+								<span>Name: </span>
+								<input type="text">
+							</li>
+							<li class="entry">
+								<span>Nickname: </span>
+								<input type="text">
+							</li>
+							<li class="entry">
+								<span>Password: </span>
+								<input type="text">
+							</li>
+							<li class="entry">
+								<span>Confirm Password: </span>
+								<input type="text">
+							</li>
+							<li class="entry">
+								<span>Email: </span>
+								<input type="text">
+							</li>
+						</ul>
+						<button class="landing_button" id="signup_next" onclick="displaySignupTwo()" type="button">Next</button>
+					</div>
+
+					<div class="form_container" id="signup_pt_two">
+						<ul class="text_fields" id="signup_fields_two">
+							<li class="entry">
+								<span>Birthdate: </span>
+								<input type="text">
+							</li>
+							<li class="entry">
+								<span>Gender: </span>
+								<input type="text">
+							</li>
+							<li class="entry">
+								<span>Native Language: </span>
+								<select>
+									<option value="" selected disabled hidden>Select language</option>
+									<option value="chinese">Chinese</option>
+									<option value="english">English</option>
+								</select>
+							</li>
+							<li class="entry language">
+								<span class="language_name">Proficiency: </span>
+								<div class="radio_container">
+									<input type="radio" name="native_lang" value="one" id="native_1">
+									<label for="native_1" class="radio"></label>
+
+									<input type="radio" name="native_lang" value="two" id="native_2">
+									<label for="native_2" class="radio"></label>
+
+									<input type="radio" name="native_lang" value="three" id="native_3">
+									<label for="native_3" class="radio"></label>
+
+									<input type="radio" name="native_lang" value="four" id="native_4">
+									<label for="native_4" class="radio"></label>
+
+									<input type="radio" name="native_lang" value="five" id="native_5">
+									<label for="native_5" class="radio"></label>
+								</div>
+							</li>
+							<li class="entry">
+								<span>Learning Language: </span>
+								<select>
+									<option value="" selected disabled hidden>Select language</option>
+									<option value="chinese">Chinese</option>
+									<option value="english">English</option>
+								</select>
+							</li>
+														<li class="entry language">
+								<span class="language_name">Proficiency: </span>
+								<div class="radio_container">
+									<input type="radio" name="learning_lang" value="one" id="learning_1">
+									<label for="learning_1" class="radio"></label>
+
+									<input type="radio" name="learning_lang" value="two" id="learning_2">
+									<label for="learning_2" class="radio"></label>
+
+									<input type="radio" name="learning_lang" value="three" id="learning_3">
+									<label for="learning_3" class="radio"></label>
+
+									<input type="radio" name="learning_lang" value="four" id="learning_4">
+									<label for="learning_4" class="radio"></label>
+
+									<input type="radio" name="learning_lang" value="five" id="learning_5">
+									<label for="learning_5" class="radio"></label>
+								</div>
+							</li>
+						</ul>
+						<div id="buttons_container">
+							<button class="landing_button" id="signup_prev" type="button" onclick="displaySignupOne()">Previous</button>
+							<input type="submit" class="landing_button" value="Sign Up"/>
+						</div>
+					</div>
+				</form>
+
+				<div id="steps">
+					<span class="step" id="step_one"></span>
+					<span class="step" id="step_two"></span>
+				</div>
+			<div>
+		</div>
+	</body>
+</html>

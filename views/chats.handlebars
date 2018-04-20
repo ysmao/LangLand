@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+   		<script
+	      src="https://code.jquery.com/jquery-3.1.1.min.js"
+	      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	      crossorigin="anonymous">
+	    </script>
+	    <script src="frontend.js"></script>
+	    <script src="server.js"></script>
+	    <link rel="stylesheet" type="text/css" href="style.css" />
+        <title>Chat/Friends</title>
+	</head>
+
+	<body>
+		{{> @nav_bar}}
+
+		<div class="main_content">
+			<div class="chats_friends">
+				<div class="tabs">
+					<button class="tab selected" id="chats_tab" onclick="toggleChatsTab()">
+						<img src="./image_resources/friends_icon.png" width=40px height=40px>
+					</button>
+					<button class="tab" id="friends_tab" onclick="toggleFriendsTab()">
+						<img src="./image_resources/chats_icon.png" width=50px height=50px>
+					</button>
+				</div>
+				<div class="tab_content selected" id="chats_tab_content">
+					<ul id="chats_list">
+						<li class="chat">
+							<img src="./image_resources/placeholder.png">
+							<div class="chat_preview_text">
+								<div class="chat_info">
+									<span class="friend_name">{{friendName}}</span>
+									<span class="time">13:00</span>
+								</div>
+								<span class="preview">first line of most recent message</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="tab_content" id="friends_tab_content">
+					<input type="text" class="searchbar" id="friends_list_search" placeholder="Search friends"/>
+					<ul id="friends_list">
+						<li class="friend you">
+							<img src="./image_resources/placeholder.png">
+							<span class="friend_name">You</span>
+						</li>
+						<li class="friend">
+							<img src="./image_resources/placeholder.png">
+							<span class="friend_name">{{friendName}}</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="leftover_space">
+				<div class="chat_content">
+				</div>
+
+				<div class="user_profile">
+					<div class="basic_info">
+						<img src="./image_resources/placeholder.png">
+						<div class="container">
+							<h1 class="username_profile">{{userName}}</h1>
+							<ul class="languages">
+								<li class="language">English:</li>
+								<li class="language">Chinese:</li>
+							</ul>
+						</div>
+					</div>
+					<div class="additional info">
+						<ul class="traits">
+							<li>Age: {{age}}</li>
+							<li>Gender: {{gender}}</li>
+							<li>Interests:</li>
+							<ul class="interests">
+								<li>Example</li>
+								<li>Example</li>
+							</ul>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
