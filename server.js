@@ -58,7 +58,7 @@ conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOIN
 
 
 // index
-app.get('/friends', function(request, response) {
+app.get('/chats', function(request, response) {
 	var data = {
 		"friendName": "Jeff",
 		"chats": ["Rita", "Beatriz", "Yunshu"],
@@ -73,7 +73,12 @@ app.get('/friends', function(request, response) {
 });
 
 app.get('/', function(req, res, next) {
-	res.render('landing');
+	var username = req.session.username;
+	if (username) {
+		res.redirect('/chats');
+	} else {
+		res.render('landing');
+	}
 });
 
 // signup

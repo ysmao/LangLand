@@ -9,6 +9,9 @@ $(document).ready(function() {
 
 		$.post('/signup', {username, password, email}, function(res){
 	        //you might want to add callback function that is executed post request success
+	        if (res == "success") {
+	        	window.location.href = '/';
+	        }
 	    });
 	});
 
@@ -22,7 +25,7 @@ $(document).ready(function() {
 		$.post('/login', {username, password}, function(res){
 	        //you might want to add callback function that is executed post request success
 	        if (res == "success") {
-	        	window.location.href = '/friends';
+	        	window.location.href = '/chats';
 	        }
 	    });
 	});
