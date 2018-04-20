@@ -58,11 +58,55 @@ conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOIN
 
 // index
 app.get('/', function(req, res, next) {
-	var sessData = req.session;
-	sessData.someAttribute = "foo";
-	res.render('home');
+	res.render('landing');
 });
 
+// signup
+app.post('/signup', saveUser);
+
+// login
+app.post('/login', loginUser);
+
+app.get('/chats', function(req, res, next) {
+	res.render('chats');
+});
+
+
+function saveUser(req, res, next) {
+	var username = request.body.username;
+	var password = request.body.password;
+	var email = request.body.email;
+
+	conn.query('INSERT INTO users (username, password, email) VALUES($1, $2, $3)', [username, password, email], function(err, data) {
+		if (err) {
+			console.error(err);
+		} else {
+			console.log(data.rows);
+		}
+	});
+
+	res.send("success");
+}
+
+function loginUser(req, res, next) {
+	var username = request.body.username;
+	var password = request.body.password;
+
+	console.log(username + " " + password);
+
+	conn.query('SELECT * FROM users WHERE username=$1 AND password=$2', [username, password], function(err, data) {
+		if (err) {
+			res.send("error");
+			console.error(err);
+		} else if (data.rows) {
+			var sessData = req.session;
+			sessData.username = username;
+			res.redirect('/chats');
+		} else {
+			res.send("failure");
+		}
+	});
+}
 
 function saveMessage(chat, username, message, time) {
 	// below is old code for realtime
