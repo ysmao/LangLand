@@ -26,11 +26,35 @@ app.use(session({
 	saveUninitialized: false
 }));
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+var hbs = exphbs.create({
+    // Specify helpers which are only registered on this instance.
+    helpers: {
+        language_bar: function(lang) {
+        	var bar = '<li class="language ';
+			if(lang.native) {
+				bar += 'native';
+			}
+			bar += '">' + lang.name;
+			
+			return bar += '</li>';
+		}
+    }
+});
+
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/image_resources'));
+
+function language(lang) {
+
+}
+
+var hbs = exphbs.create({
+    // Specify helpers which are only registered on this instance.
+    helpers: {language_bar: function(){return "Hello";}}
+});
 
 // create tables
 conn.query('CREATE TABLE IF NOT EXISTS messages (message_id INTEGER PRIMARY KEY AUTOINCREMENT, chat_id INTEGER, username TEXT, body TEXT, time INTEGER)', function(error, data) {
@@ -57,12 +81,6 @@ conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOIN
 // 		rooms.push(element.room);
 // 	});
 // });
-exphbs.registerHelper('proficiency', function(level) {
-	var bar = "";
-	for () {
-
-	}
-});
 
 
 app.get('/chats', function(request, response) {
