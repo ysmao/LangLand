@@ -291,9 +291,8 @@ table, th, td {
 	color: white;
 }
 
-.chat_content {
+#chat_content {
 	flex-grow: 1;
-	display: none;
 }
 
 /*
@@ -369,12 +368,12 @@ table, th, td {
 		    	USER PROFILE
 ============================================ 
 */
-.user_profile {
-	display: flex;
+#user_profile {
+	display: none;
 	flex-direction: column;
 }
 
-.user_profile img {
+#user_profile img {
 	width: 250px;
 	height: 250px;
 

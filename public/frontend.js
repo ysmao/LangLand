@@ -8,6 +8,9 @@ function toggleChatsTab() {
 
 	$('#friends_tab').removeClass("selected");
 	$('#friends_tab_content').removeClass("selected");
+
+	$('#chat_content').show();
+	$('#user_profile').hide();
 }
 
 function toggleFriendsTab() {
@@ -19,6 +22,9 @@ function toggleFriendsTab() {
 
 	$('#chats_tab').removeClass("selected");
 	$('#chats_tab_content').removeClass("selected");
+
+	$('#chat_content').hide();
+	$('#user_profile').css('display', 'flex');
 }
 
 function displayLogin() {

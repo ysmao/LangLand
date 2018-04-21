@@ -48,10 +48,11 @@
 			</div>
 
 			<div class="leftover_space">
-				<div class="chat_content">
+				<div id="chat_content">
+					{{> chat_room current_chat=chat}}
 				</div>
 
-				<div class="user_profile">
+				<div id="user_profile">
 					{{> user_profile user=user}}
 				</div>
 			</div>

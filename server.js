@@ -35,15 +35,6 @@ var hbs = exphbs.create({
         language_bar: function(lang) {
         	var bar = '<li class="language">';
         	bar += '<span>' + lang.name + ':</span>';
-			// for (i = 1; i <= lang.proficiency; i++) {
-			// 	bar += '<span ';
-			// 	if(lang.native) {
-			// 		bar += 'class="prog_bar native">';
-			// 	} else {
-			// 		bar += 'class="prog_bar learning">';
-			// 	}
-			// 	bar += '</span>';
-			// }
 			bar += '<span class="proficiency_bar">'
 			for (i = 1; i <= 5; i++) {
 				var c = 'class="prog_segment ';
@@ -117,7 +108,7 @@ app.get('/chats', function(request, response) {
 			]
 		}
 	};
-	response.render('chats', data);
+	response.render('chats_friends', data);
 });
 
 app.get('/chatlist', function(req, res, next) {
