@@ -21,7 +21,9 @@ app.use(session({
 	secret: 'langland-secret-token',
 	cookie: {
 		maxAge: 600000
-	}
+	},
+	resave: false,
+	saveUninitialized: false
 }));
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -63,7 +65,6 @@ exphbs.registerHelper('proficiency', function(level) {
 });
 
 
-// index
 app.get('/chats', function(request, response) {
 	var data = {
 		"chats": ["Rita", "Beatriz", "Yunshu"],
@@ -81,6 +82,19 @@ app.get('/chats', function(request, response) {
 	response.render('chats', data);
 });
 
+app.get('/chatlist', function(req, res, next) {
+	var data = {
+		"chats": ["Rita", "Beatriz", "Yunshu"],
+		"friends": ["Bob", "Alice"],
+		"user": {
+			"userName": "Send Help",
+			"age": 200,
+			"gender": "mystery"
+		}
+	};
+	res.send(data);
+});
+
 app.get('/landing', function(request, response) {
 	response.render('landing');
 });
@@ -88,7 +102,7 @@ app.get('/landing', function(request, response) {
 app.get('/', function(req, res, next) {
 	var username = req.session.username;
 	if (username) {
-		res.redirect('/chats');
+		res.redirect('/chatlist');
 	} else {
 		res.render('landing');
 	}
