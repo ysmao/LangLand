@@ -55,18 +55,27 @@ conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOIN
 // 		rooms.push(element.room);
 // 	});
 // });
+exphbs.registerHelper('proficiency', function(level) {
+	var bar = "";
+	for () {
+
+	}
+});
 
 
 // index
 app.get('/chats', function(request, response) {
 	var data = {
-		"friendName": "Jeff",
 		"chats": ["Rita", "Beatriz", "Yunshu"],
 		"friends": ["Bob", "Alice"],
 		"user": {
 			"userName": "Send Help",
 			"age": 200,
-			"gender": "mystery"
+			"gender": "mystery",
+			"languages": [
+				{"name": "English", "native": true, "proficiency": 4},
+				{"name": "Chinese", "native": false, "proficiency": 2}
+			]
 		}
 	};
 	response.render('chats', data);
