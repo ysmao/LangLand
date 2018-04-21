@@ -5,6 +5,7 @@ var colors = require('colors');
 var http = require('http');
 var express = require('express');
 var exphbs = require('express-handlebars');
+var handlebars = require('handlebars');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var anyDB = require('any-db');
@@ -27,16 +28,35 @@ app.use(session({
 }));
 
 var hbs = exphbs.create({
+	defaultLayout: 'main',
+	handlebars: handlebars,
     // Specify helpers which are only registered on this instance.
     helpers: {
         language_bar: function(lang) {
-        	var bar = '<li class="language ';
-			if(lang.native) {
-				bar += 'native';
+        	var bar = '<li class="language">';
+        	bar += '<span>' + lang.name + ':</span>';
+			// for (i = 1; i <= lang.proficiency; i++) {
+			// 	bar += '<span ';
+			// 	if(lang.native) {
+			// 		bar += 'class="prog_bar native">';
+			// 	} else {
+			// 		bar += 'class="prog_bar learning">';
+			// 	}
+			// 	bar += '</span>';
+			// }
+			bar += '<span class="proficiency_bar">'
+			for (i = 1; i <= 5; i++) {
+				var c = 'class="prog_segment ';
+				if (i <= lang.proficiency) {
+					if (lang.native) {
+						c += ' native';
+					} else {
+						c += ' learning';
+					}
+				}
+				bar += '<span ' + c + '"></span>';
 			}
-			bar += '">' + lang.name;
-			
-			return bar += '</li>';
+			return new handlebars.SafeString(bar += '</span></li>');
 		}
     }
 });

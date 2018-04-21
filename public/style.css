@@ -398,6 +398,39 @@ table, th, td {
 	font-size: 36px;
 }
 
+.language {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.proficiency_bar {
+	width: 212px;
+
+	margin: 5px 0 0 10px;
+
+	display: inline-flex;
+	justify-content: space-between;
+}
+
+.prog_segment {
+	width: 40px;
+	height: 18px;
+
+	display: inline-block;
+
+	border-radius: 5px;
+	background-color: #E1E8EC;
+}
+
+.native {
+	background-color: #F3BA00;
+}
+
+.learning {
+	background-color: #5CB3C1;
+}
+
 .interests li {
 	display: inline;
 
