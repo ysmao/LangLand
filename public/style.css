@@ -291,10 +291,6 @@ table, th, td {
 	color: white;
 }
 
-#chat_content {
-	flex-grow: 1;
-}
-
 /*
 ============================================ 
 		    	FRIENDS DISPLAY
@@ -440,6 +436,55 @@ table, th, td {
 	background-color: #01587A;
 	color: white;
 	border-radius: 7px;
+}
+
+/*
+============================================ 
+		   		 CURRENT CHAT
+============================================ 
+*/
+#chat_content {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+#chat_display {
+	flex-grow: 1;
+}
+
+#new_message {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#message_box {
+	width: 70%;
+	height: 120px;
+
+	margin: 10px 0;
+	padding: 5px;
+
+	font-size: 20px;
+
+	border: 1px solid #4D4D4D;
+	border-radius: 10px;
+}
+
+#new_message_submit {
+	width: 110px;
+	height: 70px;
+
+	margin-left: 20px;
+
+	font-size: 30px;
+	color: white;
+
+	border: none;
+	border-radius: 10px;
+	background-color: #01587A;
 }
 
 /*
