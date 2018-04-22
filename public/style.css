@@ -454,6 +454,60 @@ table, th, td {
 	flex-grow: 1;
 }
 
+.avatar {
+	width: 70px;
+	height: 70px;
+
+	border-radius: 50%;
+}
+
+.edit_button {
+	width: 30px;
+	height: 30px;
+
+	border: none;
+	border-radius: 50%;
+	background-color: #00394F;
+}
+
+.message {
+	margin-top: 20px;
+	padding: 0 20px;
+	display: flex;
+
+	align-items: flex-start;
+}
+
+.my_message {
+
+
+	justify-content: flex-end;
+}
+
+.message_content {
+	min-height: 50px;
+	max-width: 660px;
+
+	display: flex;
+	align-items: center;
+
+	padding: 10px;
+
+	font-size: 20px;
+
+	border-radius: 10px;
+}
+
+.my_message .message_content {
+	background-color: #E3E3E3;
+}
+
+.your_message .message_content {
+	margin: 0 5px 0 20px;
+	
+	background-color: #F3BA00;
+}
+
 #new_message {
 	display: flex;
 	justify-content: center;
