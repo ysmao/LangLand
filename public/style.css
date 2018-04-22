@@ -543,6 +543,39 @@ table, th, td {
 
 /*
 ============================================ 
+		   		 FILTERS TAB
+============================================ 
+*/
+#filters_tab {
+	width: 480px;
+
+	background-color: #429AA8;
+}
+
+#filters_tab h1 {
+	width: 410px;
+
+	margin: 10px auto;
+
+	font-size: 18px;
+	font-weight: normal;
+	color: white;
+
+	border-bottom: 1px solid white;
+}
+
+
+/*
+============================================ 
+		   	  RESULTS DISPLAY
+============================================ 
+*/
+#results_display {
+	flex-grow: 1;
+}
+
+/*
+============================================ 
 		    	   GENERAL
 ============================================ 
 */
@@ -573,6 +606,10 @@ table, th, td {
 
 #friends_list_search {
 	width: 345px;
+}
+
+#users_search {
+	width: 400px;
 }
 
 .leftover_space {

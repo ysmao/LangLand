@@ -1,0 +1,12 @@
+<li class="search_result">
+	<img src="placeholder.png" width="124px" height="124px">
+	<div class="result_text">
+		<h1>{{user.userName}}</h1>
+		<ul class="lang_results">
+			{{#each user.languages as |lang|}}
+				<li>{{lang.name}}</li>
+			{{/each}}
+		</ul>
+	</div>
+	<img src="start_chat_icon.png">
+</li>

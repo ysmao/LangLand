@@ -93,6 +93,29 @@ conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOIN
 // 	});
 // });
 
+app.get('/search', function(request, response) {
+	var data = {"results": [
+		{
+			"userName": "Send Help",
+			"age": 200,
+			"gender": "mystery",
+			"languages": [
+				{"name": "English", "native": true, "proficiency": 4},
+				{"name": "Chinese", "native": false, "proficiency": 2}
+			]
+		},
+		{
+			"userName": "Another User",
+			"age": 200,
+			"gender": "mystery",
+			"languages": [
+				{"name": "English", "native": false, "proficiency": 1},
+				{"name": "Chinese", "native": true, "proficiency": 5}
+			]
+		}
+	]};
+	response.render('search', data);
+});
 
 app.get('/chats', function(request, response) {
 	var data = {
