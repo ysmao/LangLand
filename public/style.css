@@ -418,12 +418,20 @@ table, th, td {
 	background-color: #E1E8EC;
 }
 
-.native {
+.language .native {
 	background-color: #F3BA00;
 }
 
-.learning {
+.language .learning {
 	background-color: #5CB3C1;
+}
+
+.lang_results li .native {
+	color: #F3BA00;
+}
+
+.lang_results li .learning {
+	color: #5CB3C1;
 }
 
 .interests li {
@@ -572,6 +580,36 @@ table, th, td {
 */
 #results_display {
 	flex-grow: 1;
+}
+
+.search_result {
+	margin-top: 30px;
+	padding: 0 40px;
+
+	display: flex;
+	align-items: center;
+}
+
+.search_result .avatar {
+	width: 124px;
+	height: 124px;
+
+	margin-right: 25px;
+}
+
+.result_text h1 {
+	font-size: 36px;
+	color: #01587A;
+}
+
+.lang_results li {
+	display: inline;
+
+	font-size: 24px;
+}
+
+.start_chat_icon {
+	margin-left: auto;
 }
 
 /*

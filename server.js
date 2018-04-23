@@ -48,6 +48,15 @@ var hbs = exphbs.create({
 				bar += '<span ' + c + '"></span>';
 			}
 			return new handlebars.SafeString(bar += '</span></li>');
+		},
+		result_language: function(lang) {
+			var bar = '<li class="lang_result"><span ';
+			if (lang.native) {
+				bar += 'class="native">'
+			} else {
+				bar += 'class="learning">'
+			}
+			return new handlebars.SafeString(bar += lang.name + '</span></li>');
 		}
     }
 });
@@ -109,8 +118,8 @@ app.get('/search', function(request, response) {
 			"age": 200,
 			"gender": "mystery",
 			"languages": [
-				{"name": "English", "native": false, "proficiency": 1},
-				{"name": "Chinese", "native": true, "proficiency": 5}
+				{"name": "Chinese", "native": true, "proficiency": 1},
+				{"name": "English", "native": false, "proficiency": 5}
 			]
 		}
 	]};
