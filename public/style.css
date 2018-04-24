@@ -572,6 +572,115 @@ table, th, td {
 	border-bottom: 1px solid white;
 }
 
+#filters_list {
+	width: 410px;
+
+	margin: 0 auto;
+
+	color: white;
+	font-size: 24px;
+}
+
+.filter {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	margin-top: 15px;
+}
+
+.description {
+	font-weight: bold;
+}
+
+#min_age, #max_age, #interest_filter {
+	height: 30px;
+
+	padding-left: 10px;
+
+	font-size: 20px;
+
+	border: none;
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+#min_age, #max_age {
+	width: 45px;
+}
+
+#interest_filter {
+	width: 200px;
+	z-index: 1;
+}
+
+#language_filter {
+	font-size: 24px;
+	color: white;
+
+	border: none;
+	background-color: transparent;
+}
+
+#language_filter option {
+	color: black;
+}
+
+#proficiency_slider {
+	width: 200px;
+
+	display: inline-block;
+}
+
+.noUi-horizontal {
+	height: 12px;
+}
+
+.noUi-background {
+	background-color: #F5F5F5;
+}
+
+.noUi-target {
+	border: none;
+}
+
+.noUi-connect {
+	background-color: #F3BA00;
+}
+
+.noUi-value-horizontal {
+	display: none;
+}
+
+.noUi-horizontal .noUi-handle {
+	width: 14px;
+	height: 24px;
+	left: -7px;
+	top: -6px;
+}
+
+.noUi-handle:after, .noUi-handle:before {
+	top: 5px;
+}
+
+.noUi-handle:before {
+	left: 4px;
+}
+
+.noUi-handle:after {
+	left: 7px;
+}
+
+.noUi-marker-horizontal.noUi-marker-large,
+.noUi-marker-horizontal.noUi-marker-sub {
+	height: 24px;
+
+}
+
+.noUi-marker-large, .noUi-marker-sub {
+	background-color: black;
+	top: -17px;
+}
 
 /*
 ============================================ 
@@ -591,21 +700,21 @@ table, th, td {
 }
 
 .search_result .avatar {
-	width: 124px;
-	height: 124px;
+	width: 120px;
+	height: 120px;
 
 	margin-right: 25px;
 }
 
 .result_text h1 {
-	font-size: 36px;
+	font-size: 30px;
 	color: #01587A;
 }
 
 .lang_results li {
 	display: inline;
 
-	font-size: 24px;
+	font-size: 20px;
 }
 
 .start_chat_icon {
