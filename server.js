@@ -78,19 +78,57 @@ var hbs = exphbs.create({
 });
 
 // create tables
-conn.query('CREATE TABLE IF NOT EXISTS messages (message_id INTEGER PRIMARY KEY AUTOINCREMENT, chat_id INTEGER, username TEXT, body TEXT, time INTEGER)', function(error, data) {
+conn.query('CREATE TABLE IF NOT EXISTS messages ( \
+	message_id INTEGER PRIMARY KEY AUTOINCREMENT, \
+	chat_id INTEGER, \
+	username TEXT, \
+	body TEXT, \
+	time INTEGER, \
+	FOREIGN KEY(chat_id) REFERENCES chats(chat_id) \
+		ON DELETE CASCADE ON UPDATE CASCADE, \
+	FOREIGN KEY(username) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE)', 
+	function(error, data) {
 	if (error) {
-		console.log(error);
+		console.log("messages: " + error);
 	}
 });
-conn.query('CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT)', function(error, data) {
+conn.query('CREATE TABLE IF NOT EXISTS users ( \
+	username TEXT PRIMARY KEY, \
+	password TEXT, \
+	email TEXT, \
+	birthdate TEXT, \
+	gender TEXT)', 
+	function(error, data) {
 	if (error) {
-		console.log(error);
+		console.log("users: " + error);
 	}
 });
-conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOINCREMENT, sender TEXT, receiver TEXT, new_msg_count INTEGER)', function(error, data) {
+conn.query('CREATE TABLE IF NOT EXISTS languages ( \
+	language_id INTEGER PRIMARY KEY AUTOINCREMENT, \
+	username TEXT, \
+	language TEXT, \
+	proficiency INTEGER, \
+	native INTEGER, \
+	FOREIGN KEY(username) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE)', 
+	function(error, data) {
 	if (error) {
-		console.log(error);
+		console.log("languages: " + error);
+	}
+});
+conn.query('CREATE TABLE IF NOT EXISTS chats ( \
+	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
+	sender TEXT, \
+	receiver TEXT, \
+	new_msg_count INTEGER, \
+	FOREIGN KEY(sender) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE, \
+	FOREIGN KEY(receiver) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE)', 
+	function(error, data) {
+	if (error) {
+		console.log("chats: " + error);
 	}
 });
 
@@ -158,6 +196,8 @@ app.get('/chatlist', function(req, res, next) {
 	res.send(data);
 });
 
+app.get('/searchresults', getAllUsers);
+
 app.get('/landing', function(request, response) {
 	response.render('landing');
 });
@@ -181,20 +221,82 @@ app.post('/login', loginUser);
 app.post('/load-profile', loadProfile);
 
 
+function getAllUsers(req, res, next) {
+	var query = 'SELECT username, birthdate, gender FROM users';
+	conn.query(query, function(err, data) {
+		if (err) {
+			res.send("error");
+			console.error(err);
+		} else if (data.rows) {
+			// res.send(data.rows);
+			getAllUserLangInfo(req, res, next, data.rows);
+		} else {
+			console.log("uhh");
+			res.send("failure");
+		}
+	});
+}
+
+function getAllUserLangInfo(req, res, next, userData) {
+	var query = 'SELECT * FROM languages WHERE username=$1';
+	var usersFinished = 0;
+	userData.forEach(function(user, index, array) {
+		conn.query(query, [user.username], function(err, data) {
+			usersFinished++;
+			if (err) {
+				console.error(err);
+			} else {
+				user.languages = data.rows;
+				if (usersFinished === array.length) {
+					res.send(array);
+				}
+			}
+		});
+	});
+}
+
 function saveUser(req, res, next) {
 	var username = req.body.username;
 	var password = req.body.password;
 	var email = req.body.email;
+	var birthdate = req.body.birthdate;
+    var gender = req.body.gender;
 
-	conn.query('INSERT INTO users (username, password, email) VALUES($1, $2, $3)', [username, password, email], function(err, data) {
-		if (err) {
-			console.error(err);
-		} else {
-			console.log(data.rows);
-		}
+    var query = 'INSERT INTO users (username, password, email, birthdate, gender) VALUES($1, $2, $3, $4, $5)';
+	conn.query(query, [username, password, email, birthdate, gender], function(err, data) {
+		saveUser1(req, res, next, err, data);
 	});
+}
 
-	res.send("success");
+function saveUser1(req, res, next, err, data) {
+	if (err) {
+		console.error(err);
+		res.send("error");
+	} else {
+		var username = req.body.username;
+	    var native = req.body.native;
+	    var native_proficiency = req.body.native_proficiency;
+	    var learning = req.body.learning;
+	    var learning_proficiency = req.body.learning_proficiency;
+
+		var query = 'INSERT INTO languages (username, language, proficiency, native) VALUES($1, $2, $3, $4)';
+		conn.query(query, [username, native, native_proficiency, 1], function(err, data) {
+			if (err) {
+				console.error(err);
+			} else {
+				console.log('added native language for ' + username);
+			}
+		});
+		conn.query(query, [username, learning, learning_proficiency, 0], function(err, data) {
+			if (err) {
+				console.error(err);
+			} else {
+				console.log('added learning language for ' + username);
+			}
+		});
+
+		res.send("success");
+	}
 }
 
 function loginUser(req, res, next) {
