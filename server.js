@@ -121,9 +121,9 @@ conn.query('CREATE TABLE IF NOT EXISTS chats ( \
 	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
 	user1 TEXT, \
 	user2 TEXT, \
-	FOREIGN KEY(sender) REFERENCES users(username) \
+	FOREIGN KEY(user1) REFERENCES users(username) \
 		ON DELETE CASCADE ON UPDATE CASCADE, \
-	FOREIGN KEY(receiver) REFERENCES users(username) \
+	FOREIGN KEY(user2) REFERENCES users(username) \
 		ON DELETE CASCADE ON UPDATE CASCADE)', 
 	function(error, data) {
 	if (error) {
@@ -385,13 +385,65 @@ function loadProfile(req, res, next) {
 	res.send("success");
 }
 
+
+// will need this function?
 function saveMessage(chat, username, message, time) {
 	// below is old code for realtime
-	// conn.query('INSERT INTO messages (room, nickname, body, time) VALUES($1, $2, $3, $4)', [roomName, nickname, message, time], function(error, data) {
-	// 	if (error) {
-	// 		console.error('ERROR: could not add message to table');
-	// 	}
-	// });
+	conn.query('INSERT INTO messages (room, nickname, body, time) VALUES($1, $2, $3, $4)', [roomName, nickname, message, time], function(error, data) {
+		if (error) {
+			console.error('ERROR: could not add message to table');
+		}
+	});
+}
+
+// discarded. moved to sockets
+// function joinChatrooms(username, rooms){
+// 	for(var i = 0; i < rooms.length; i++) {
+//     var room = rooms[i];
+//     socket.join(room, () => {
+//     let alljoinedrooms = Object.keys(socket.rooms);
+//     console.log(alljoinedrooms);
+//   	});
+
+//     console.log(room.id);
+// }
+// }
+
+//server join
+function joinChatroom(socket, roomdata, callback) {
+
+    if (!roomdata.chat_id) {
+        console.log('err id');
+        return false;
+    }
+    
+    if (!roomdata.user1) {
+        console.log('err user1');
+        return false;
+    }
+
+    if (!roomdata.user2) {
+        console.log('err user2');
+        return false;
+    }
+    
+    socket.join(roomdata.roomname);
+    socket.chat_id = roomdata.chat_id;
+    socket.user1 = roomdata.user1;
+    socket.user2 = roomdata.user2;
+    //callback response...
+
+}
+
+//client emit. not sure where to put this function yet.
+function joinChatroom1(roomname, nickname) {
+    var data = {roomname: roomname, username: nickname};
+    socket.emit('join', data, function(response) {
+        console.log(response);
+        if (response.status === 200) {
+
+        }
+    });
 }
 
 // function generateRoomIdentifier() {
@@ -406,8 +458,49 @@ function saveMessage(chat, username, message, time) {
 // 	return result;
 // }
 
-
+console.log(100);
 io.sockets.on('connection', function(socket) {
+	console.log(111);
+	socket.on('join', function(roomName, nickname, callback) {
+		//socket.join(roomName);
+		socket.nickname = nickname;
+		socket.roomName = roomName;
+		conn.query('SELECT * FROM chats WHERE user1=$1 OR user2=$1', [nickname], function(error, data) {
+			if (error) {
+				console.error(error);
+			} else {
+				for(var i = 0; i < rooms.length; i++) {
+    				var room = rooms[i];
+    				socket.join(room, () => {
+    					let alljoinedrooms = Object.keys(socket.rooms);
+    					console.log(alljoinedrooms);
+  					});
+    				joinChatroom(socket, room, callback);
+    				console.log(room.id);
+				}
+			}
+		});
+
+		conn.query('SELECT * from messages WHERE (sender=$1 OR receiver=$1) AND time<>$2', [roomName, 0], function(error, data) {
+	    	var messages = data.rows;
+	    	if (error) {
+	    		console.error(error);
+	    	}
+			callback(messages);
+	    });
+	});
+
+	socket.on('message', function(val) {
+		var roomName = socket.roomName;
+		var nickname = val.nickname;
+		var message = val.body;
+		var time = val.time;
+		saveMessage(roomName, nickname, message, time);
+		console.log(val.body);
+		io.sockets.in(roomName).emit('message', [val]);
+	});
+
+
 	// // clients emit this when they join new rooms
 	// socket.on('join', function(roomName, nickname, callback) {
 	// 	socket.join(roomName);
