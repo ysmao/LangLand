@@ -204,7 +204,23 @@ app.get('/chats/:user', function(req, res, next) {
 		if (err) {
 			console.err(err);
 		} else {
-			res.send(data.rows);
+			// res.send(data.rows);
+			//var render_data = {"messages": data.rows};
+			var render_data = {
+				"chats": ["Rita", "Beatriz", "Yunshu"],
+				"friends": ["Bob", "Alice"],
+				"user": {
+					"userName": "Send Help",
+					"age": 200,
+					"gender": "mystery",
+					"languages": [
+						{"name": "English", "native": true, "proficiency": 4},
+						{"name": "Chinese", "native": false, "proficiency": 2}
+					]
+				},
+				"messages": data.rows
+			};
+			res.render('chats_friends', render_data);
 		}
 	});
 });

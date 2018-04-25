@@ -7,8 +7,8 @@
 	      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
 	      crossorigin="anonymous">
 	    </script>
-	    <script src="frontend.js"></script>
-	    <link rel="stylesheet" type="text/css" href="style.css" />
+	    <script src="/frontend.js"></script>
+	    <link rel="stylesheet" type="text/css" href="/style.css" />
         <title>Chat/Friends</title>
 	</head>
 
@@ -19,10 +19,10 @@
 			<div class="chats_friends">
 				<div class="tabs">
 					<button class="tab selected" id="chats_tab" onclick="toggleChatsTab()">
-						<img src="chats_icon.png" alt="Chats" width=55 height=55>
+						<img src="/chats_icon.png" alt="Chats" width=55 height=55>
 					</button>
-					<button class="tab" id="friends_tab" onclick="toggleFriendsTab()">
-						<img src="friends_icon.png" alt="Friends" width=50 height=50>
+					<button class="tab" id="/friends_tab" onclick="toggleFriendsTab()">
+						<img src="/friends_icon.png" alt="Friends" width=50 height=50>
 					</button>
 				</div>
 				<div class="tab_content selected" id="chats_tab_content">
@@ -36,7 +36,7 @@
 					<input type="text" class="searchbar" id="friends_list_search" placeholder="Search friends"/>
 					<ul id="friends_list">
 						<li class="friend you">
-							<img src="placeholder.png" alt="You">
+							<img src="/placeholder.png" alt="You">
 							<span class="friend_name">You</span>
 						</li>
 						{{#each friends as |name|}}
@@ -48,7 +48,7 @@
 
 			<div class="leftover_space">
 				<div id="chat_content">
-					{{> chat_room current_chat=chat}}
+					{{> chat_room messages=messages}}
 				</div>
 
 				<div id="user_profile">
