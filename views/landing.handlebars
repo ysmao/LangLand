@@ -63,15 +63,15 @@
 						<ul class="text_fields" id="signup_fields_two">
 							<li class="entry">
 								<span>Birthdate: </span>
-								<input type="date">
+								<input type="date" id="signup_birthdate" >
 							</li>
 							<li class="entry">
 								<span>Gender: </span>
-								<input type="text">
+								<input type="text" id="signup_gender" >
 							</li>
 							<li class="entry">
 								<span>Native Language: </span>
-								<select>
+								<select id="signup_native">
 									<option value="" selected disabled hidden>Select language</option>
 									<option value="chinese">Chinese</option>
 									<option value="english">English</option>
@@ -79,7 +79,7 @@
 							</li>
 							<li class="entry">
 								<span class="language_name">Proficiency: </span>
-								<div class="radio_container">
+								<div class="radio_container" id="signup_native_proficiency" >
 									<input type="radio" name="native_lang" value="5" id="native_5">
 									<label for="native_5" class="radio"></label>
 
@@ -98,7 +98,7 @@
 							</li>
 							<li class="entry">
 								<span>Learning Language: </span>
-								<select>
+								<select id="signup_learning">
 									<option value="" selected disabled hidden>Select language</option>
 									<option value="chinese">Chinese</option>
 									<option value="english">English</option>
@@ -106,7 +106,7 @@
 							</li>
 							<li class="entry">
 								<span class="language_name">Proficiency: </span>
-								<div class="radio_container">
+								<div class="radio_container" id="signup_learning_proficiency">
 									<input type="radio" name="learning_lang" value="5" id="learning_5">
 									<label for="learning_5" class="radio"></label>
 

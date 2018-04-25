@@ -78,19 +78,56 @@ var hbs = exphbs.create({
 });
 
 // create tables
-conn.query('CREATE TABLE IF NOT EXISTS messages (message_id INTEGER PRIMARY KEY AUTOINCREMENT, chat_id INTEGER, username TEXT, body TEXT, time INTEGER)', function(error, data) {
+conn.query('CREATE TABLE IF NOT EXISTS messages ( \
+	message_id INTEGER PRIMARY KEY AUTOINCREMENT, \
+	chat_id INTEGER, \
+	username TEXT, \
+	body TEXT, \
+	time INTEGER, \
+	FOREIGN KEY(chat_id) REFERENCES chats(chat_id) \
+		ON DELETE CASCADE ON UPDATE CASCADE, \
+	FOREIGN KEY(username) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE)', 
+	function(error, data) {
 	if (error) {
-		console.log(error);
+		console.log("messages: " + error);
 	}
 });
-conn.query('CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT)', function(error, data) {
+conn.query('CREATE TABLE IF NOT EXISTS users ( \
+	username TEXT PRIMARY KEY, \
+	password TEXT, \
+	email TEXT, \
+	birthdate TEXT, \
+	gender TEXT)', 
+	function(error, data) {
 	if (error) {
-		console.log(error);
+		console.log("users: " + error);
 	}
 });
-conn.query('CREATE TABLE IF NOT EXISTS chats (chat_id INTEGER PRIMARY KEY AUTOINCREMENT, sender TEXT, receiver TEXT, new_msg_count INTEGER)', function(error, data) {
+conn.query('CREATE TABLE IF NOT EXISTS languages ( \
+	username TEXT PRIMARY KEY, \
+	language TEXT, \
+	proficiency INTEGER, \
+	native INTEGER, \
+	FOREIGN KEY(username) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE)', 
+	function(error, data) {
 	if (error) {
-		console.log(error);
+		console.log("languages: " + error);
+	}
+});
+conn.query('CREATE TABLE IF NOT EXISTS chats ( \
+	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
+	sender TEXT, \
+	receiver TEXT, \
+	new_msg_count INTEGER, \
+	FOREIGN KEY(sender) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE, \
+	FOREIGN KEY(receiver) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE)', 
+	function(error, data) {
+	if (error) {
+		console.log("chats: " + error);
 	}
 });
 
