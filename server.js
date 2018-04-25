@@ -80,13 +80,13 @@ var hbs = exphbs.create({
 // create tables
 conn.query('CREATE TABLE IF NOT EXISTS messages ( \
 	message_id INTEGER PRIMARY KEY AUTOINCREMENT, \
-	chat_id INTEGER, \
-	username TEXT, \
+	sender TEXT, \
+	receiver TEXT, \
 	body TEXT, \
 	time INTEGER, \
-	FOREIGN KEY(chat_id) REFERENCES chats(chat_id) \
+	FOREIGN KEY(sender) REFERENCES users(username) \
 		ON DELETE CASCADE ON UPDATE CASCADE, \
-	FOREIGN KEY(username) REFERENCES users(username) \
+	FOREIGN KEY(receiver) REFERENCES users(username) \
 		ON DELETE CASCADE ON UPDATE CASCADE)', 
 	function(error, data) {
 	if (error) {
@@ -117,20 +117,20 @@ conn.query('CREATE TABLE IF NOT EXISTS languages ( \
 		console.log("languages: " + error);
 	}
 });
-conn.query('CREATE TABLE IF NOT EXISTS chats ( \
-	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
-	sender TEXT, \
-	receiver TEXT, \
-	new_msg_count INTEGER, \
-	FOREIGN KEY(sender) REFERENCES users(username) \
-		ON DELETE CASCADE ON UPDATE CASCADE, \
-	FOREIGN KEY(receiver) REFERENCES users(username) \
-		ON DELETE CASCADE ON UPDATE CASCADE)', 
-	function(error, data) {
-	if (error) {
-		console.log("chats: " + error);
-	}
-});
+// conn.query('CREATE TABLE IF NOT EXISTS chats ( \
+// 	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
+// 	sender TEXT, \
+// 	receiver TEXT, \
+// 	new_msg_count INTEGER, \
+// 	FOREIGN KEY(sender) REFERENCES users(username) \
+// 		ON DELETE CASCADE ON UPDATE CASCADE, \
+// 	FOREIGN KEY(receiver) REFERENCES users(username) \
+// 		ON DELETE CASCADE ON UPDATE CASCADE)', 
+// 	function(error, data) {
+// 	if (error) {
+// 		console.log("chats: " + error);
+// 	}
+// });
 
 
 // keeps track of all the rooms
@@ -195,6 +195,37 @@ app.get('/chatlist', function(req, res, next) {
 	};
 	res.send(data);
 });
+
+app.get('/chats/:user', function(req, res, next) {
+	// TODO
+	var user1 = req.session.username;
+	var user2 = req.params.user;
+	var query = 'SELECT * FROM messages WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)';
+	conn.query(query, [user1, user2], function(err, data) {
+		if (err) {
+			console.err(err);
+		} else {
+			res.send(data.rows);
+		}
+	});
+});
+
+// app.get('/addmessages', function(req, res, next) {
+// 	var query = 'INSERT INTO messages (sender, receiver, body, time) VALUES($1, $2, $3, $4)';
+// 	conn.query(query, ["rding", "chip", "hellooooo", 100], function(err, data) {
+// 		if (err) {
+// 			console.error(err);
+// 		} else {
+// 			conn.query(query, ["chip", "rding", "hi there!", 200], function(err, data) {
+// 				if (err) {
+// 					console.error(err);
+// 				} else {
+// 					res.send('yay');
+// 				}
+// 			});
+// 		}
+// 	});
+// });
 
 app.get('/search', getAllUsers);
 
@@ -297,16 +328,12 @@ function saveUser1(req, res, next, err, data) {
 		conn.query(query, [username, native, native_proficiency, 1], function(err, data) {
 			if (err) {
 				console.error(err);
-			} else {
-				console.log('added native language for ' + username);
-			}
+			} 
 		});
 		conn.query(query, [username, learning, learning_proficiency, 0], function(err, data) {
 			if (err) {
 				console.error(err);
-			} else {
-				console.log('added learning language for ' + username);
-			}
+			} 
 		});
 
 		res.send("success");
