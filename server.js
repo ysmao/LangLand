@@ -52,12 +52,12 @@ var hbs = exphbs.create({
 		},
 		result_language: function(lang) {
 			var bar = '<li class="lang_result"><span ';
-			if (lang.native) {
+			if (lang.native === 1) {
 				bar += 'class="native">'
 			} else {
 				bar += 'class="learning">'
 			}
-			return new handlebars.SafeString(bar += lang.name + '</span></li>');
+			return new handlebars.SafeString(bar += lang.language + '</span></li>');
 		}
     }
 });
@@ -141,30 +141,30 @@ conn.query('CREATE TABLE IF NOT EXISTS chats ( \
 // 	});
 // });
 
-app.get('/search', function(request, response) {
+// app.get('/search', function(request, response) {
 
-	var data = {"results": [
-		{
-			"userName": "Send Help",
-			"age": 200,
-			"gender": "mystery",
-			"languages": [
-				{"name": "English", "native": true, "proficiency": 4},
-				{"name": "Chinese", "native": false, "proficiency": 2}
-			]
-		},
-		{
-			"userName": "Another User",
-			"age": 200,
-			"gender": "mystery",
-			"languages": [
-				{"name": "Chinese", "native": true, "proficiency": 1},
-				{"name": "English", "native": false, "proficiency": 5}
-			]
-		}
-	]};
-	response.render('search', data);
-});
+// 	var data = {"results": [
+// 		{
+// 			"userName": "Send Help",
+// 			"age": 200,
+// 			"gender": "mystery",
+// 			"languages": [
+// 				{"name": "English", "native": true, "proficiency": 4},
+// 				{"name": "Chinese", "native": false, "proficiency": 2}
+// 			]
+// 		},
+// 		{
+// 			"userName": "Another User",
+// 			"age": 200,
+// 			"gender": "mystery",
+// 			"languages": [
+// 				{"name": "Chinese", "native": true, "proficiency": 1},
+// 				{"name": "English", "native": false, "proficiency": 5}
+// 			]
+// 		}
+// 	]};
+// 	response.render('search', data);
+// });
 
 app.get('/chats', function(request, response) {
 	var data = {
@@ -196,7 +196,7 @@ app.get('/chatlist', function(req, res, next) {
 	res.send(data);
 });
 
-app.get('/searchresults', getAllUsers);
+app.get('/search', getAllUsers);
 
 app.get('/landing', function(request, response) {
 	response.render('landing');
@@ -228,7 +228,6 @@ function getAllUsers(req, res, next) {
 			res.send("error");
 			console.error(err);
 		} else if (data.rows) {
-			// res.send(data.rows);
 			getUserLangInfo(req, res, next, getUserAges(data.rows));
 		} else {
 			console.log("uhh");
@@ -262,12 +261,12 @@ function getUserLangInfo(req, res, next, userData) {
 			} else {
 				user.languages = data.rows;
 				if (usersFinished === array.length) {
-					return res.send(array);
+					var data = { "results" : array };
+					res.render('search', data);
 				}
 			}
 		});
 	});
-	// return userData;
 }
 
 function saveUser(req, res, next) {
