@@ -186,29 +186,96 @@ app.get('/chats', function(request, response) {
 });
 
 app.get('/chatlist', function(req, res, next) {
-	var data = {
-		"chats": ["Rita", "Beatriz", "Yunshu"],
-		"friends": ["Bob", "Alice"],
-		"user": {
-			"userName": "Send Help",
-			"age": 200,
-			"gender": "mystery"
+	var me = req.session.username;
+	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
+	conn.query(query, [me], function(err, data) {
+		if (err) {
+			console.error(err);
+		} else {
+			var data = {
+				"chats": getChats(me, data.rows),
+				"friends": ["Bob", "Alice"],
+				"user": {
+					"userName": "Send Help",
+					"age": 200,
+					"gender": "mystery",
+					"languages": [
+						{"name": "English", "native": true, "proficiency": 4},
+						{"name": "Chinese", "native": false, "proficiency": 2}
+					]
+				}
+			};
+			res.render('chats_friends', data);
 		}
-	};
-	res.send(data);
+	});
 });
+
+function getChats(me, chats) {
+	chats.forEach(function(chat, index, array) {
+		if (me === chat.user1) {
+			chat.username = chat.user2;
+		} else {
+			chat.username = chat.user1;
+		}
+
+		delete chat.user1;
+		delete chat.user2;
+	});
+	return chats;
+}
 
 app.get('/chats/:user', function(req, res, next) {
 	// TODO
 	var user1 = req.session.username;
 	var user2 = req.params.user;
+	var query = 'SELECT * FROM chats WHERE (user1=$1 AND user2=$2) OR (user1=$2 AND user2=$1)';
+	conn.query(query, [user1, user2], function(err, data) {
+		if (err) {
+			console.error(err);
+		} else if (data.rows.length === 0) {
+			addChat(req, res, next, user1, user2);
+		} else {
+			console.log(data.rows);
+			getMessages(req, res, next, user1, user2);
+		}
+	});
+});
+
+function addChat(req, res, next, user1, user2) {
+	var query = 'INSERT INTO chats (user1, user2, newest_msg) VALUES($1, $2, $3)';
+	conn.query(query, [user1, user2, -1], function(err, data) { 
+		if (err) {
+			console.log(err);
+		} else {
+			console.log("created a new chat with " + user2);
+			var render_data = {
+				"chats": ["Rita", "Beatriz", "Yunshu"],
+				"friends": ["Bob", "Alice"],
+				"user": {
+					"userName": "Send Help",
+					"age": 200,
+					"gender": "mystery",
+					"languages": [
+						{"name": "English", "native": true, "proficiency": 4},
+						{"name": "Chinese", "native": false, "proficiency": 2}
+					]
+				},
+				"messages": []
+			};
+			res.render('chats_friends', render_data);
+		}
+	});
+}
+
+function getMessages(req, res, next, user1, user2) {
 	var query = 'SELECT * FROM messages WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)';
 	conn.query(query, [user1, user2], function(err, data) {
 		if (err) {
-			console.err(err);
+			console.error(err);
 		} else {
 			// res.send(data.rows);
 			//var render_data = {"messages": data.rows};
+
 			var render_data = {
 				"chats": ["Rita", "Beatriz", "Yunshu"],
 				"friends": ["Bob", "Alice"],
@@ -226,7 +293,7 @@ app.get('/chats/:user', function(req, res, next) {
 			res.render('chats_friends', render_data);
 		}
 	});
-});
+}
 
 // app.get('/addmessages', function(req, res, next) {
 // 	var query = 'INSERT INTO messages (sender, receiver, body, time) VALUES($1, $2, $3, $4)';
@@ -316,12 +383,6 @@ function getUserLangInfo(req, res, next, userData) {
 			}
 		});
 	});
-}
-
-function getChats(req, res, next) {
-	var user1 = req.session.username;
-
-	// var query = 'SELECT username FROM users '
 }
 
 function saveUser(req, res, next) {
