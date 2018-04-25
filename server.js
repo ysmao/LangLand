@@ -229,7 +229,7 @@ function getAllUsers(req, res, next) {
 			console.error(err);
 		} else if (data.rows) {
 			// res.send(data.rows);
-			getAllUserLangInfo(req, res, next, data.rows);
+			getUserLangInfo(req, res, next, getUserAges(data.rows));
 		} else {
 			console.log("uhh");
 			res.send("failure");
@@ -237,7 +237,21 @@ function getAllUsers(req, res, next) {
 	});
 }
 
-function getAllUserLangInfo(req, res, next, userData) {
+function getUserAges(userData) {
+	var today = Date.now();
+	userData.forEach(function(user, index, array) {
+		var birthdate = new Date(user.birthdate).getTime();
+		var ageDifMs = today - birthdate;
+		var ageDate = new Date(ageDifMs);
+		var age = ageDate.getUTCFullYear() - 1970;
+
+		user.age = age;
+		delete user.birthdate;
+	});
+	return userData;
+}
+
+function getUserLangInfo(req, res, next, userData) {
 	var query = 'SELECT * FROM languages WHERE username=$1';
 	var usersFinished = 0;
 	userData.forEach(function(user, index, array) {
@@ -248,11 +262,12 @@ function getAllUserLangInfo(req, res, next, userData) {
 			} else {
 				user.languages = data.rows;
 				if (usersFinished === array.length) {
-					res.send(array);
+					return res.send(array);
 				}
 			}
 		});
 	});
+	// return userData;
 }
 
 function saveUser(req, res, next) {
