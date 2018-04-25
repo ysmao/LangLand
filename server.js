@@ -117,20 +117,19 @@ conn.query('CREATE TABLE IF NOT EXISTS languages ( \
 		console.log("languages: " + error);
 	}
 });
-// conn.query('CREATE TABLE IF NOT EXISTS chats ( \
-// 	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
-// 	sender TEXT, \
-// 	receiver TEXT, \
-// 	new_msg_count INTEGER, \
-// 	FOREIGN KEY(sender) REFERENCES users(username) \
-// 		ON DELETE CASCADE ON UPDATE CASCADE, \
-// 	FOREIGN KEY(receiver) REFERENCES users(username) \
-// 		ON DELETE CASCADE ON UPDATE CASCADE)', 
-// 	function(error, data) {
-// 	if (error) {
-// 		console.log("chats: " + error);
-// 	}
-// });
+conn.query('CREATE TABLE IF NOT EXISTS chats ( \
+	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
+	user1 TEXT, \
+	user2 TEXT, \
+	FOREIGN KEY(sender) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE, \
+	FOREIGN KEY(receiver) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE)', 
+	function(error, data) {
+	if (error) {
+		console.log("chats: " + error);
+	}
+});
 
 
 // keeps track of all the rooms
