@@ -177,6 +177,9 @@ app.post('/signup', saveUser);
 // login
 app.post('/login', loginUser);
 
+// load user profile
+app.post('/load-profile', loadProfile);
+
 
 function saveUser(req, res, next) {
 	var username = req.body.username;
@@ -211,6 +214,17 @@ function loginUser(req, res, next) {
 			res.send("failure");
 		}
 	});
+}
+
+function loadProfile(req, res, next) {
+	var username = req.body.username;
+
+	// request the user's information
+
+	// built user object with the returned info
+
+	// reload the whole damn page w the new info i guess
+	res.send("success");
 }
 
 function saveMessage(chat, username, message, time) {

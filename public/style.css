@@ -310,6 +310,11 @@ table, th, td {
 	padding: 16px 0;
 }
 
+.friend:hover {
+	background-color: #5CB3C1;
+	border-radius: 2px;
+}
+
 .friend img {
 	width: 62px;
 	height: 62px;
@@ -382,6 +387,10 @@ table, th, td {
 .basic_info {
 	display: flex;
 	align-items: center;
+}
+
+.additional_info {
+	margin-top: 20px;
 }
 
 .username_profile {

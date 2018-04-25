@@ -48,3 +48,15 @@ function displaySignupTwo() {
 	$('#step_two').addClass("current");
 	$('#step_one').removeClass("current");
 }
+
+$(document).ready(function() {
+	$('.friend').click(function(event) {
+		var username = $(this).attr('id');
+		$.post('/load-profile', {username}, function(res){
+	        //you might want to add callback function that is executed post request success
+	        if (res == "success") {
+	        	console.log("congration you done it");
+	        }
+	    });
+	});
+});
