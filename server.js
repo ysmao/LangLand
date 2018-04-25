@@ -121,9 +121,12 @@ conn.query('CREATE TABLE IF NOT EXISTS chats ( \
 	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
 	user1 TEXT, \
 	user2 TEXT, \
+	newest_msg INTEGER, \
 	FOREIGN KEY(user1) REFERENCES users(username) \
 		ON DELETE CASCADE ON UPDATE CASCADE, \
 	FOREIGN KEY(user2) REFERENCES users(username) \
+		ON DELETE CASCADE ON UPDATE CASCADE, \
+	FOREIGN KEY(newest_msg) REFERENCES messages(message_id) \
 		ON DELETE CASCADE ON UPDATE CASCADE)', 
 	function(error, data) {
 	if (error) {
@@ -313,6 +316,12 @@ function getUserLangInfo(req, res, next, userData) {
 			}
 		});
 	});
+}
+
+function getChats(req, res, next) {
+	var user1 = req.session.username;
+
+	// var query = 'SELECT username FROM users '
 }
 
 function saveUser(req, res, next) {
