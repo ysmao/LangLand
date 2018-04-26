@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+   		<script
+	      src="https://code.jquery.com/jquery-3.1.1.min.js"
+	      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	      crossorigin="anonymous">
+	    </script>
+	    <script src="/frontend.js"></script>
+	    <link rel="stylesheet" type="text/css" href="/style.css" />
+        <title>Chat/Friends</title>
+	</head>
+
+	<body>
+		{{> nav_bar}}
+
+		<div class="main_content">
+			<div class="chats_friends">
+				<div class="tabs">
+					<button class="tab" id="chats_tab">
+						<img src="/chats_icon.png" alt="Chats" width=55 height=55>
+					</button>
+					<button class="tab selected" id="friends_tab">
+						<img src="/friends_icon.png" alt="Friends" width=50 height=50>
+					</button>
+				</div>
+				<div class="tab_content selected" id="friends_tab_content">
+					<input type="text" class="searchbar" id="friends_list_search" placeholder="Search friends"/>
+					<ul id="friends_list">
+						<li class="friend you">
+							<img src="/placeholder.png" alt="You">
+							<span class="friend_name">You</span>
+						</li>
+						{{#each friends as |name|}}
+							{{> friend friendName=name}}
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+
+			<div class="leftover_space">
+				<div id="chat_content">
+					{{> chat_room messages=messages}}
+				</div>
+
+				<div id="user_profile">
+					{{> user_profile user=user}}
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

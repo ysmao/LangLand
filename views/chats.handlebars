@@ -18,10 +18,10 @@
 		<div class="main_content">
 			<div class="chats_friends">
 				<div class="tabs">
-					<button class="tab selected" id="chats_tab" onclick="toggleChatsTab()">
+					<button class="tab selected" id="chats_tab">
 						<img src="/chats_icon.png" alt="Chats" width=55 height=55>
 					</button>
-					<button class="tab" id="friends_tab" onclick="toggleFriendsTab()">
+					<button class="tab" id="friends_tab">
 						<img src="/friends_icon.png" alt="Friends" width=50 height=50>
 					</button>
 				</div>
@@ -29,18 +29,6 @@
 					<ul id="chats_list">
 						{{#each chats as |name|}}
 							{{> chat friendName=name}}
-						{{/each}}
-					</ul>
-				</div>
-				<div class="tab_content" id="friends_tab_content">
-					<input type="text" class="searchbar" id="friends_list_search" placeholder="Search friends"/>
-					<ul id="friends_list">
-						<li class="friend you">
-							<img src="/placeholder.png" alt="You">
-							<span class="friend_name">You</span>
-						</li>
-						{{#each friends as |name|}}
-							{{> friend friendName=name}}
 						{{/each}}
 					</ul>
 				</div>

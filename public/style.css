@@ -282,10 +282,6 @@ table, th, td {
 	background-color: #A7D5D9;
 }
 
-#friends_tab_content {
-	display: none;
-}
-
 .friend_name {
 	font-size: 24px;
 

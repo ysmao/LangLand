@@ -168,6 +168,21 @@ conn.query('CREATE TABLE IF NOT EXISTS chats ( \
 app.get('/chats', function(request, response) {
 	var data = {
 		"chats": ["Rita", "Beatriz", "Yunshu"],
+		"user": {
+			"userName": "Send Help",
+			"age": 200,
+			"gender": "mystery",
+			"languages": [
+				{"name": "English", "native": true, "proficiency": 4},
+				{"name": "Chinese", "native": false, "proficiency": 2}
+			]
+		}
+	};
+	response.render('chats', data);
+});
+
+app.get('/friends', function(request, response) {
+	var data = {
 		"friends": ["Bob", "Alice"],
 		"user": {
 			"userName": "Send Help",
@@ -179,7 +194,7 @@ app.get('/chats', function(request, response) {
 			]
 		}
 	};
-	response.render('chats_friends', data);
+	response.render('friends', data);
 });
 
 app.get('/chatlist', function(req, res, next) {
