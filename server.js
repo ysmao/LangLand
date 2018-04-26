@@ -58,6 +58,26 @@ var hbs = exphbs.create({
 				bar += 'class="learning">'
 			}
 			return new handlebars.SafeString(bar += lang.language + '</span></li>');
+		},
+		chat_message: function(message, me) {
+			console.log(me);
+			var c = 'class="message ';
+			if (message.sender == me) {
+				c += 'my_message"';
+			} else {
+				c += 'your_message"';
+			}
+			var first_li = '<li ' + c + '>'
+			var message_content = '<div class="message_content">' + message.body + '</div>';
+			if (message.sender == me) {
+				return new handlebars.SafeString(first_li + message_content + '</li>');
+			} else {
+				var img = '<img src="/placeholder.png" alt="' + message.sender + '" class="avatar">';
+				var edit_button = '<button class="edit_button"> \
+				<img src="/edit_icon.png" width="17" height="17" alt="edit message"> \
+				</button>';
+				return new handlebars.SafeString(first_li + img + message_content + edit_button + '</li>');
+			}
 		}
     }
 });
@@ -202,12 +222,14 @@ app.get('/friends', function(request, response) {
 
 app.get('/chatlist', function(req, res, next) {
 	var me = req.session.username;
+	console.log(me);
 	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
 	conn.query(query, [me], function(err, data) {
 		if (err) {
 			console.error(err);
 		} else {
 			var data = {
+				"myUsername": me,
 				"chats": getChats(me, data.rows),
 				"friends": ["Bob", "Alice"],
 				"user": {
@@ -220,7 +242,7 @@ app.get('/chatlist', function(req, res, next) {
 					]
 				}
 			};
-			res.render('chats_friends', data);
+			res.render('chats', data);
 		}
 	});
 });
@@ -236,6 +258,7 @@ function getChats(me, chats) {
 		delete chat.user1;
 		delete chat.user2;
 	});
+	console.log(chats);
 	return chats;
 }
 
@@ -277,7 +300,7 @@ function addChat(req, res, next, user1, user2) {
 				},
 				"messages": []
 			};
-			res.render('chats_friends', render_data);
+			res.render('chats', render_data);
 		}
 	});
 }
@@ -288,9 +311,6 @@ function getMessages(req, res, next, user1, user2) {
 		if (err) {
 			console.error(err);
 		} else {
-			// res.send(data.rows);
-			//var render_data = {"messages": data.rows};
-
 			var render_data = {
 				"chats": ["Rita", "Beatriz", "Yunshu"],
 				"friends": ["Bob", "Alice"],
@@ -305,7 +325,8 @@ function getMessages(req, res, next, user1, user2) {
 				},
 				"messages": data.rows
 			};
-			res.render('chats_friends', render_data);
+			console.log(data.rows);
+			res.render('chats', render_data);
 		}
 	});
 }

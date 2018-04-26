@@ -28,7 +28,7 @@
 				<div class="tab_content selected" id="chats_tab_content">
 					<ul id="chats_list">
 						{{#each chats as |name|}}
-							{{> chat friendName=name}}
+							{{> chat friendName=name.username me=myUsername}}
 						{{/each}}
 					</ul>
 				</div>
