@@ -18,10 +18,10 @@
 		<div class="main_content">
 			<div class="chats_friends">
 				<div class="tabs">
-					<button class="tab selected" id="chats_tab">
+					<button class="tab selected" id="chats_tab" onclick="toggleChatsTab()">
 						<img src="/chats_icon.png" alt="Chats" width=55 height=55>
 					</button>
-					<button class="tab" id="friends_tab">
+					<button class="tab" id="friends_tab" onclick="toggleFriendsTab()">
 						<img src="/friends_icon.png" alt="Friends" width=50 height=50>
 					</button>
 				</div>
@@ -37,10 +37,6 @@
 			<div class="leftover_space">
 				<div id="chat_content">
 					{{> chat_room messages=messages}}
-				</div>
-
-				<div id="user_profile">
-					{{> user_profile user=user}}
 				</div>
 			</div>
 		</div>

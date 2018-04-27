@@ -1,29 +1,11 @@
 function toggleChatsTab() {
-	$('#chats_tab_content').show();
-	$('#friends_tab_content').hide();
-
-	$('#chats_tab').addClass("selected");
-	$('#chats_tab_content').addClass("selected");
-
-	$('#friends_tab').removeClass("selected");
-	$('#friends_tab_content').removeClass("selected");
-
-	$('#chat_content').show();
-	$('#user_profile').hide();
+	window.location = '/chats';
 }
 
 function toggleFriendsTab() {
-	$('#chats_tab_content').hide();
-	$('#friends_tab_content').show();
-
-	$('#friends_tab').addClass("selected");
-	$('#friends_tab_content').addClass("selected");
-
-	$('#chats_tab').removeClass("selected");
-	$('#chats_tab_content').removeClass("selected");
-
-	$('#chat_content').hide();
-	$('#user_profile').css('display', 'flex');
+	// should eventually have a get request to load the friend's page
+	// w the current user's profile
+	window.location = '/friends';
 }
 
 function displayLogin() {
