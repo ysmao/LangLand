@@ -190,7 +190,7 @@ table, th, td {
 	border-radius: 50%;
 }
 
-.current {
+.current_step {
 	background-color: #01587A;
 }
 
@@ -307,7 +307,7 @@ table, th, td {
 }
 
 .friend:hover {
-	background-color: #5CB3C1;
+	background-color: #55ADBB;
 	border-radius: 2px;
 }
 
@@ -337,6 +337,10 @@ table, th, td {
 	padding: 10px 0;
 
 	border-bottom: 1px solid white;
+}
+
+.chat:hover {
+	background-color: #55ADBB;
 }
 
 .chat img {
@@ -739,6 +743,10 @@ table, th, td {
 
 .selected {
 	background-color: #429AA8;
+}
+
+.current_friend, .current_chat {
+	background-color: #54A5B3 !important;
 }
 
 .searchbar {

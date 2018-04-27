@@ -372,6 +372,9 @@ app.post('/login', loginUser);
 // load user profile
 app.post('/load-profile', loadProfile);
 
+// load chat
+app.post('/load-chat', loadChat);
+
 
 function getAllUsers(req, res, next) {
 	var query = 'SELECT username, birthdate, gender FROM users';
@@ -481,6 +484,17 @@ function loginUser(req, res, next) {
 }
 
 function loadProfile(req, res, next) {
+	var username = req.body.username;
+
+	// request the user's information
+
+	// built user object with the returned info
+
+	// reload the whole damn page w the new info i guess
+	res.send("success");
+}
+
+function loadChat(req, res, next) {
 	var username = req.body.username;
 
 	// request the user's information
