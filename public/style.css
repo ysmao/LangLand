@@ -167,33 +167,27 @@ table, th, td {
 }
 
 
-.radio_container .native, .radio_container .learning,
-.radio_container:hover .native,
-.radio_container:hover .learning  {
-	background-color: #E1E8EC;
+.entry input[type="radio"] {
+	display: none;
+}
+
+.radio, .radio_container:hover .radio  {
 	width: 27px;
 	height: 12px;
 
 	display: inline-block;
+
+	background-color: #E1E8EC;
 	border-radius: 3px;
 }
 
- #signup_learning_proficiency input[type="radio"]:checked ~ .radio {
-	background-color: #5CB3C1;
+.entry input[type="radio"]:checked ~ .radio {
+	background-color: red;
 }
 
- #signup_native_proficiency input[type="radio"]:checked ~ .radio {
-	background-color: #F3BA00;
-}
-
-.radio_container:hover .native:hover,
-.radio_container:hover .native:hover ~ .radio {
-    background-color: #ffca1f !important;
-}
-
-.radio_container:hover .learning:hover,
-.radio_container:hover .learning:hover ~ .radio {
-    background-color: #6dc6d4 !important;
+.radio_container:hover .radio:hover,
+.radio_container:hover .radio:hover ~ .radio {
+    background-color: blue !important;
 }
 
 .language_name {
