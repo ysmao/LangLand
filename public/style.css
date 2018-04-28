@@ -80,9 +80,9 @@ table, th, td {
 	border-radius: 7px;
 }
 
-#signup_pt_one, #signup_pt_two {
+/*#signup_pt_one, #signup_pt_two {
 	height: 227px;
-}
+}*/
 
 .form_container {
 	display: none;
@@ -118,11 +118,24 @@ table, th, td {
 	margin: 5px 0;
 }
 
-.entry span {
+.error_container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.error_message {
+	font-size: 12px;
+	color: red;
+}
+
+.entry .description {
 	width: 130px;
 
 	font-size: 14px;
+	font-weight: normal;
 	text-align: right;
+	margin-right: 20px;
 }
 
 .entry input[type="text"], .entry input[type="password"],
@@ -130,15 +143,15 @@ table, th, td {
 	width: 150px;
 	border: 1px solid #D9D9D9;
 	border-radius: 5px;
-	margin-left: 20px;
-	font-size: 14px;
+/*	margin-left: 20px;*/
+	font-size: 16px;
 }
 
 .entry select {
 	border: none;
 	text-align: right;
 	margin-left: 20px;
-	font-size: 14px;
+	font-size: 16px;
 }
 
 .radio_container {
@@ -153,27 +166,38 @@ table, th, td {
 	display: none;
 }
 
-.radio, .radio_container:hover .radio  {
+
+.radio_container .native, .radio_container .learning,
+.radio_container:hover .native,
+.radio_container:hover .learning  {
+	background-color: #E1E8EC;
 	width: 27px;
 	height: 12px;
 
 	display: inline-block;
-
-	background-color: #E1E8EC;
 	border-radius: 3px;
 }
 
-.entry input[type="radio"]:checked ~ .radio {
-	background-color: red;
+ #signup_learning_proficiency input[type="radio"]:checked ~ .radio {
+	background-color: #5CB3C1;
 }
 
-.radio_container:hover .radio:hover,
-.radio_container:hover .radio:hover ~ .radio {
-    background-color: blue !important;
+ #signup_native_proficiency input[type="radio"]:checked ~ .radio {
+	background-color: #F3BA00;
+}
+
+.radio_container:hover .native:hover,
+.radio_container:hover .native:hover ~ .radio {
+    background-color: #ffca1f !important;
+}
+
+.radio_container:hover .learning:hover,
+.radio_container:hover .learning:hover ~ .radio {
+    background-color: #6dc6d4 !important;
 }
 
 .language_name {
-	font-weight: 300;
+	font-weight: 300 !important;
 }
 
 #steps {

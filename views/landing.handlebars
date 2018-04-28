@@ -8,6 +8,7 @@
 	      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
 	      crossorigin="anonymous">
 	    </script>
+	    <script src="/jquery.validate.js"></script>
 	    <script src="/frontend.js"></script>
 	    <script src="/landing.js"></script>
         <title>LangLand</title>
@@ -40,88 +41,102 @@
 					<div class="form_container" id="signup_pt_one">
 						<ul class="text_fields" id="signup_fields_one">
 							<li class="entry">
-								<span>Username: </span>
-								<input type="text" id="signup_username">
+								<span class="description">Username: </span>
+								<span class="error_container">
+									<input type="text" id="signup_username" name="signup_username">
+								</span>
 							</li>
 							<li class="entry">
-								<span>Password: </span>
-								<input type="password" id="signup_password">
+								<span class="description">Password: </span>
+								<span class="error_container">
+									<input type="password" id="signup_password" name="signup_password">
+								</span>
 							</li>
 							<li class="entry">
-								<span>Confirm Password: </span>
-								<input type="password">
+								<span class="description">Confirm Password: </span>
+								<span class="error_container">
+									<input type="password" id="signup_conf_password" name="signup_conf_password">
+								</span>
 							</li>
 							<li class="entry">
-								<span>Email: </span>
-								<input type="text" id="signup_email" >
+								<span class="description">Email: </span>
+								<input type="text" id="signup_email" name="signup_email">
 							</li>
 						</ul>
-						<button class="landing_button" id="signup_next" onclick="displaySignupTwo()" type="button">Next</button>
+						<button class="landing_button" id="signup_next" type="button">Next</button>
 					</div>
 
 					<div class="form_container" id="signup_pt_two">
 						<ul class="text_fields" id="signup_fields_two">
 							<li class="entry">
-								<span>Birthdate: </span>
-								<input type="date" id="signup_birthdate" >
+								<span class="description">Birthdate: </span>
+								<input type="date" id="signup_birthdate" name="signup_birthdate">
 							</li>
 							<li class="entry">
-								<span>Gender: </span>
-								<input type="text" id="signup_gender" >
+								<span class="description">Gender: </span>
+								<input type="text" id="signup_gender" name="signup_gender">
 							</li>
 							<li class="entry">
-								<span>Native Language: </span>
-								<select id="signup_native">
-									<option value="" selected disabled hidden>Select language</option>
-									<option value="chinese">Chinese</option>
-									<option value="english">English</option>
-								</select>
+								<span class="description">Native Language: </span>
+								<span class="error_container">
+									<select id="signup_native" name="signup_native">
+										<option value="" selected disabled hidden>Select language</option>
+										<option value="chinese">Chinese</option>
+										<option value="english">English</option>
+									</select>
+								</span>
 							</li>
 							<li class="entry">
-								<span class="language_name">Proficiency: </span>
-								<div class="radio_container" id="signup_native_proficiency" >
-									<input type="radio" name="native_lang" value="5" id="native_5">
-									<label for="native_5" class="radio"></label>
+								<span class="description language_name">Proficiency: </span>
+								<span class="error_container">
+									<div class="radio_container" id="signup_native_proficiency" >
+										<input type="radio" name="native_lang" value="5" id="native_5" checked>
+										<label for="native_5" class="radio native"></label>
 
-									<input type="radio" name="native_lang" value="4" id="native_4">
-									<label for="native_4" class="radio"></label>
+										<input type="radio" name="native_lang" value="4" id="native_4">
+										<label for="native_4" class="radio native"></label>
 
-									<input type="radio" name="native_lang" value="3" id="native_3">
-									<label for="native_3" class="radio"></label>
+										<input type="radio" name="native_lang" value="3" id="native_3">
+										<label for="native_3" class="radio native"></label>
 
-									<input type="radio" name="native_lang" value="2" id="native_2">
-									<label for="native_2" class="radio"></label>
+										<input type="radio" name="native_lang" value="2" id="native_2">
+										<label for="native_2" class="radio native"></label>
 
-									<input type="radio" name="native_lang" value="1" id="native_1">
-									<label for="native_1" class="radio"></label>
-								</div>
+										<input type="radio" name="native_lang" value="1" id="native_1">
+										<label for="native_1" class="radio native"></label>
+									</div>
+								</span>
 							</li>
 							<li class="entry">
-								<span>Learning Language: </span>
-								<select id="signup_learning">
-									<option value="" selected disabled hidden>Select language</option>
-									<option value="Chinese">Chinese</option>
-									<option value="English">English</option>
-								</select>
+								<span class="description">Learning Language: </span>
+								<span class="error_container">
+									<select id="signup_learning" name="signup_learning">
+										<option value="" selected disabled hidden>Select language</option>
+										<option value="Chinese">Chinese</option>
+										<option value="English">English</option>
+									</select>
+								</span>
 							</li>
 							<li class="entry">
-								<span class="language_name">Proficiency: </span>
-								<div class="radio_container" id="signup_learning_proficiency">
-									<input type="radio" name="learning_lang" value="5" id="learning_5">
-									<label for="learning_5" class="radio"></label>
+								<span class="description language_name">Proficiency: </span>
+								<span class="error_container">
+									<div class="radio_container" id="signup_learning_proficiency">
+										<input type="radio" name="learning_lang" value="5" id="learning_5">
+										<label for="learning_5" class="radio learning"></label>
 
-									<input type="radio" name="learning_lang" value="4" id="learning_4">
-									<label for="learning_4" class="radio"></label>
+										<input type="radio" name="learning_lang" value="4" id="learning_4">
+										<label for="learning_4" class="radio learning"></label>
 
-									<input type="radio" name="learning_lang" value="3" id="learning_3">
-									<label for="learning_3" class="radio"></label>
+										<input type="radio" name="learning_lang" value="3" id="learning_3">
+										<label for="learning_3" class="radio learning"></label>
 
-									<input type="radio" name="learning_lang" value="2" id="learning_2">
-									<label for="learning_2" class="radio"></label>
+										<input type="radio" name="learning_lang" value="2" id="learning_2">
+										<label for="learning_2" class="radio learning"></label>
 
-									<input type="radio" name="learning_lang" value="1" id="learning_1">
-									<label for="learning_1" class="radio"></label>
-								</div>
+										<input type="radio" name="learning_lang" value="1" id="learning_1" checked>
+										<label for="learning_1" class="radio learning"></label>
+									</div>
+								</span>
 							</li>
 						</ul>
 						<div id="buttons_container">
