@@ -518,8 +518,6 @@ a {
 }
 
 .my_message {
-
-
 	justify-content: flex-end;
 }
 
@@ -556,6 +554,7 @@ a {
 #message_box {
 	width: 70%;
 	height: 120px;
+	resize: none;
 
 	margin: 10px 0;
 	padding: 5px;
