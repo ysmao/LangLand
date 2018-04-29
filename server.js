@@ -163,46 +163,82 @@ conn.query('CREATE TABLE IF NOT EXISTS chats ( \
 // 	});
 // });
 
-// app.get('/search', function(request, response) {
-
-// 	var data = {"results": [
-// 		{
-// 			"userName": "Send Help",
-// 			"age": 200,
-// 			"gender": "mystery",
-// 			"languages": [
-// 				{"name": "English", "native": true, "proficiency": 4},
-// 				{"name": "Chinese", "native": false, "proficiency": 2}
-// 			]
-// 		},
-// 		{
-// 			"userName": "Another User",
-// 			"age": 200,
-// 			"gender": "mystery",
-// 			"languages": [
-// 				{"name": "Chinese", "native": true, "proficiency": 1},
-// 				{"name": "English", "native": false, "proficiency": 5}
-// 			]
-// 		}
-// 	]};
-// 	response.render('search', data);
-// });
-
-app.get('/friends', function(request, response) {
-	var data = {
-		"friends": ["Bob", "Alice"],
-		"user": {
-			"userName": "Send Help",
-			"age": 200,
-			"gender": "mystery",
-			"languages": [
-				{"name": "English", "native": true, "proficiency": 4},
-				{"name": "Chinese", "native": false, "proficiency": 2}
-			]
+app.get('/friends', function(req, res) {
+	var me = req.session.username;
+	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
+	conn.query(query, [me], function(err, data) {
+		if (err) {
+			console.error(err);
+		} else {
+			var data = {
+				"myUsername": me,
+				"friends": getChats(me, data.rows)
+			};
+			res.render('friends', data);
 		}
-	};
-	response.render('friends', data);
+	});
 });
+
+app.get('/friends/:user', function(req, res, next) {
+	var friend = req.params.user;
+	var me = req.session.username;
+	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
+	conn.query(query, [me], function(err, data) {
+		if (err) {
+			console.error(err);
+		} else {
+			var render_data = {
+				"myUsername": me,
+				"friends": getChats(me, data.rows)
+			};
+			getUserInfo(req, res, next, friend, render_data);
+		}
+	});
+});
+
+function getUserInfo(req, res, next, user, render_data) {
+	var query = 'SELECT users.username, \
+	users.birthdate, \
+	users.gender, \
+	languages.language, \
+	languages.proficiency, \
+	languages.native \
+	FROM users INNER JOIN languages ON users.username=languages.username WHERE users.username=$1';
+	conn.query(query, [user], function(err, data) {
+		if (err) {
+			console.error(err);
+		} else {
+			var userinfo = data.rows[0];
+			var nativelang;
+			var learninglang;
+			if (data.rows[0].native === 1) {
+				nativelang = data.rows[0];
+				learninglang = data.rows[1];
+			} else {
+				nativelang = data.rows[1];
+				learninglang = data.rows[0];
+			}
+
+			var user = {
+				"username": userinfo.username,
+				"age": getAge(userinfo.birthdate),
+				"gender": userinfo.gender
+			}
+
+			delete nativelang.username;
+			delete nativelang.birthdate;
+			delete nativelang.gender;
+
+			delete learninglang.username;
+			delete learninglang.birthdate;
+			delete learninglang.gender;
+
+			user.languages = [nativelang, learninglang];
+			render_data.profile = user;
+			res.render('friends', render_data);
+		}
+	});
+}
 
 app.get('/chats', function(req, res, next) {
 	var me = req.session.username;
@@ -231,13 +267,10 @@ function getChats(me, chats) {
 		delete chat.user1;
 		delete chat.user2;
 	});
-	console.log(chats);
 	return chats;
 }
 
 app.get('/chats/:user', function(req, res, next) {
-	// TODO
-
 	var me = req.session.username;
 	var them = req.params.user;
 	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
@@ -252,18 +285,6 @@ app.get('/chats/:user', function(req, res, next) {
 			getChat(req, res, next, me, them, data);
 		}
 	});
-
-	// var query = 'SELECT * FROM chats WHERE (user1=$1 AND user2=$2) OR (user1=$2 AND user2=$1)';
-	// conn.query(query, [user1, user2], function(err, data) {
-	// 	if (err) {
-	// 		console.error(err);
-	// 	} else if (data.rows.length === 0) {
-	// 		addChat(req, res, next, user1, user2);
-	// 	} else {
-	// 		console.log(data.rows);
-	// 		getMessages(req, res, next, user1, user2);
-	// 	}
-	// });
 });
 
 function getChat(req, res, next, user1, user2, data) {
@@ -291,21 +312,6 @@ function addChat(req, res, next, user1, user2, render_data) {
 		if (err) {
 			console.log(err);
 		} else {
-			console.log("created a new chat with " + user2);
-			// var render_data = {
-			// 	"chats": ["Rita", "Beatriz", "Yunshu"],
-			// 	"friends": ["Bob", "Alice"],
-			// 	"user": {
-			// 		"userName": "Send Help",
-			// 		"age": 200,
-			// 		"gender": "mystery",
-			// 		"languages": [
-			// 			{"name": "English", "native": true, "proficiency": 4},
-			// 			{"name": "Chinese", "native": false, "proficiency": 2}
-			// 		]
-			// 	},
-			// 	"messages": []
-			// };
 			render_data.chats.push({username: user2});
 			render_data.messages = [];
 			res.render('chats', render_data);
@@ -319,14 +325,7 @@ function getMessages(req, res, next, user1, user2, render_data) {
 		if (err) {
 			console.error(err);
 		} else {
-			// var render_data = {
-			// 	"chats": ["Rita", "Beatriz", "Yunshu"],
-			// 	"friends": ["Bob", "Alice"],
-			// 	"me": user1,
-			// 	"messages": data.rows
-			// };
 			render_data.messages = data.rows;
-			// console.log(data.rows);
 			res.render('chats', render_data);
 		}
 	});
@@ -395,15 +394,17 @@ function getAllUsers(req, res, next) {
 function getUserAges(userData) {
 	var today = Date.now();
 	userData.forEach(function(user, index, array) {
-		var birthdate = new Date(user.birthdate).getTime();
-		var ageDifMs = today - birthdate;
-		var ageDate = new Date(ageDifMs);
-		var age = ageDate.getUTCFullYear() - 1970;
-
-		user.age = age;
+		user.age = getAge(user.birthdate);
 		delete user.birthdate;
 	});
 	return userData;
+}
+
+function getAge(bday) {
+	var birthdate = new Date(bday).getTime();
+	var ageDifMs = Date.now(); - birthdate;
+	var ageDate = new Date(ageDifMs);
+	return ageDate.getUTCFullYear() - 1970;
 }
 
 function getUserLangInfo(req, res, next, userData) {
