@@ -408,9 +408,10 @@ function getUserAges(userData) {
 
 function getAge(bday) {
 	var birthdate = new Date(bday).getTime();
-	var ageDifMs = Date.now(); - birthdate;
+	var ageDifMs = Date.now() - birthdate;
 	var ageDate = new Date(ageDifMs);
-	return ageDate.getUTCFullYear() - 1970;
+	var age = ageDate.getUTCFullYear() - 1970;
+	return age;
 }
 
 function getUserLangInfo(req, res, next, userData) {
