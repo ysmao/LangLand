@@ -381,6 +381,15 @@ app.post('/load-profile', loadProfile);
 // load chat
 app.post('/load-chat', loadChat);
 
+// save message
+app.post('/chats/save', saveMessage);
+
+// correct message
+app.post('/chats/correct', correctMessage);
+
+// translate message
+app.post('/chats/trans', transMessage);
+
 
 function getAllUsers(req, res, next) {
 	var query = 'SELECT username, birthdate, gender FROM users';
@@ -514,16 +523,62 @@ function loadChat(req, res, next) {
 	res.send("success");
 }
 
+function saveMessage(req, res, next) {
+	console.log("saving");
+	var message_body = req.body.message;
+	var time = req.body.time;
+	var sender = req.body.sender;
+	var receiver = req.body.receiver;
 
-// will need this function?
-function saveMessage(chat, username, message, time) {
-	// below is old code for realtime
-	conn.query('INSERT INTO messages (room, nickname, body, time) VALUES($1, $2, $3, $4)', [roomName, nickname, message, time], function(error, data) {
+	conn.query('INSERT INTO messages (sender, receiver, body, time, correction, translation) VALUES($1, $2, $3, $4, $5, $6)', [sender, receiver, message_body, time, "", ""], function(error, data) {
 		if (error) {
 			console.error('ERROR: could not add message to table');
 		}
+		console.log(345);
+		console.log(message_body);
+		console.log(sender);
 	});
 }
+
+function correctMessage(req, res, next) {
+	console.log("correct saving");
+	var message_body = req.body.message;
+	var id = req.body.id;
+	var sender = req.body.sender;
+	var receiver = req.body.receiver;
+
+	conn.query('UPDATE messages SET correction=$1 WHERE message_id=$2', [message_body, id], function(error, data) {
+		if (error) {
+			console.error('ERROR: could not add corrected message to table');
+		}
+
+	});
+}
+
+function transMessage(req, res, next) {
+	console.log("trans saving");
+	var message_body = req.body.message;
+	var id = req.body.id;
+	var sender = req.body.sender;
+	var receiver = req.body.receiver;
+
+	conn.query('UPDATE messages SET translation=$1 WHERE message_id=$2', [message_body, id], function(error, data) {
+		if (error) {
+			console.error('ERROR: could not add translated message to table');
+		}
+
+	});
+}
+
+// will need this function?
+// function saveMessage(chat, username, message, time) {
+// 	// below is old code for realtime
+// 	conn.query('INSERT INTO messages (room, nickname, body, time) VALUES($1, $2, $3, $4)', [roomName, nickname, message, time], function(error, data) {
+// 		if (error) {
+// 			console.error('ERROR: could not add message to table');
+// 		}
+// 	});
+// }
 
 // discarded. moved to sockets
 // function joinChatrooms(username, rooms){
