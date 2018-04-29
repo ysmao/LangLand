@@ -110,6 +110,8 @@ conn.query('CREATE TABLE IF NOT EXISTS messages ( \
 	receiver TEXT, \
 	body TEXT, \
 	time INTEGER, \
+	correction TEXT, \
+	translation TEXT, \
 	FOREIGN KEY(sender) REFERENCES users(username) \
 		ON DELETE CASCADE ON UPDATE CASCADE, \
 	FOREIGN KEY(receiver) REFERENCES users(username) \
