@@ -137,8 +137,6 @@ conn.query('CREATE TABLE IF NOT EXISTS languages ( \
 		console.log("languages: " + error);
 	}
 });
-
-conn.query('DROP TABLE chats');
 conn.query('CREATE TABLE IF NOT EXISTS chats ( \
 	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
 	user1 TEXT, \
