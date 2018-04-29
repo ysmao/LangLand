@@ -35,7 +35,7 @@ var hbs = exphbs.create({
     helpers: {
         language_bar: function(lang) {
         	var bar = '<li class="language">';
-        	bar += '<span>' + lang.name + ':</span>';
+        	bar += '<span>' + lang.language + ':</span>';
 			bar += '<span class="proficiency_bar">'
 			for (i = 1; i <= 5; i++) {
 				var c = 'class="prog_segment ';
@@ -480,13 +480,13 @@ function loginUser(req, res, next) {
 		if (err) {
 			res.send("error");
 			console.error(err);
-		} else if (data.rows) {
+		} else if (data.rows.length === 0) {
+			console.log("uhh");
+			res.send("login failed");
+		} else {
 			var sessData = req.session;
 			sessData.username = username;
 			res.send("success");
-		} else {
-			console.log("uhh");
-			res.send("failure");
 		}
 	});
 }

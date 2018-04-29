@@ -96,12 +96,12 @@ $(document).ready(function() {
 		    var learning = $('#signup_learning').val();
 		    var learning_proficiency = $('input[name=learning_lang]:checked').val();
 
-			// $.post('/signup', {username, password, email, birthdate, gender, native, native_proficiency, learning, learning_proficiency}, function(res){
-		 //        //you might want to add callback function that is executed post request success
-		 //        if (res == "success") {
-		 //        	window.location.href = '/';
-		 //        }
-		 //    });
+			$.post('/signup', {username, password, email, birthdate, gender, native, native_proficiency, learning, learning_proficiency}, function(res){
+		        //you might want to add callback function that is executed post request success
+		        if (res === "success") {
+		        	window.location.href = '/';
+		        }
+		    });
 		}
 
 

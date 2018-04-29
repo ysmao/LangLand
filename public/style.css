@@ -393,7 +393,6 @@ a {
 ============================================ 
 */
 #user_profile {
-	display: none;
 	flex-direction: column;
 }
 
