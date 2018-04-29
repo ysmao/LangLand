@@ -12,12 +12,14 @@ $(document).ready(function() {
 	$('#new_message').submit(function(event) {
 		event.preventDefault();
 
+		var pathname = window.location.pathname.split( '/' );
+
 		var message = $('#message_box').val();
 		var time = new Date().getTime();
 		var sender = $('#message_sender').val();
-		var receiver = $('#receiver').val();
+		var receiver = pathname[2];
 
-		console.log(message);
+		console.log(receiver);
 		//$('#new_message')[0].reset(); //go back to default
     	$.post('/chats/save', {message:message, time:time, sender:sender, receiver:receiver}, function(res){
         	//you might want to add callback function that is executed post request success
