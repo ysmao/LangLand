@@ -60,7 +60,7 @@ var hbs = exphbs.create({
 			return new handlebars.SafeString(bar += lang.language + '</span></li>');
 		},
 		chat_message: function(message, me) {
-			console.log(me);
+			console.log("hi " + me);
 			var c = 'class="message ';
 			if (message.sender == me) {
 				c += 'my_message"';
@@ -137,6 +137,8 @@ conn.query('CREATE TABLE IF NOT EXISTS languages ( \
 		console.log("languages: " + error);
 	}
 });
+
+conn.query('DROP TABLE chats');
 conn.query('CREATE TABLE IF NOT EXISTS chats ( \
 	chat_id INTEGER PRIMARY KEY AUTOINCREMENT, \
 	user1 TEXT, \
@@ -188,22 +190,6 @@ conn.query('CREATE TABLE IF NOT EXISTS chats ( \
 // 	response.render('search', data);
 // });
 
-app.get('/chats', function(request, response) {
-	var data = {
-		"chats": ["Rita", "Beatriz", "Yunshu"],
-		"user": {
-			"userName": "Send Help",
-			"age": 200,
-			"gender": "mystery",
-			"languages": [
-				{"name": "English", "native": true, "proficiency": 4},
-				{"name": "Chinese", "native": false, "proficiency": 2}
-			]
-		}
-	};
-	response.render('chats', data);
-});
-
 app.get('/friends', function(request, response) {
 	var data = {
 		"friends": ["Bob", "Alice"],
@@ -220,9 +206,8 @@ app.get('/friends', function(request, response) {
 	response.render('friends', data);
 });
 
-app.get('/chatlist', function(req, res, next) {
+app.get('/chats', function(req, res, next) {
 	var me = req.session.username;
-	console.log(me);
 	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
 	conn.query(query, [me], function(err, data) {
 		if (err) {
@@ -230,17 +215,7 @@ app.get('/chatlist', function(req, res, next) {
 		} else {
 			var data = {
 				"myUsername": me,
-				"chats": getChats(me, data.rows),
-				"friends": ["Bob", "Alice"],
-				"user": {
-					"userName": "Send Help",
-					"age": 200,
-					"gender": "mystery",
-					"languages": [
-						{"name": "English", "native": true, "proficiency": 4},
-						{"name": "Chinese", "native": false, "proficiency": 2}
-					]
-				}
+				"chats": getChats(me, data.rows)
 			};
 			res.render('chats', data);
 		}
@@ -264,68 +239,96 @@ function getChats(me, chats) {
 
 app.get('/chats/:user', function(req, res, next) {
 	// TODO
-	var user1 = req.session.username;
-	var user2 = req.params.user;
-	var query = 'SELECT * FROM chats WHERE (user1=$1 AND user2=$2) OR (user1=$2 AND user2=$1)';
-	conn.query(query, [user1, user2], function(err, data) {
+
+	var me = req.session.username;
+	var them = req.params.user;
+	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
+	conn.query(query, [me], function(err, data) {
 		if (err) {
 			console.error(err);
-		} else if (data.rows.length === 0) {
-			addChat(req, res, next, user1, user2);
 		} else {
-			console.log(data.rows);
-			getMessages(req, res, next, user1, user2);
+			var data = {
+				"myUsername": me,
+				"chats": getChats(me, data.rows)
+			};
+			getChat(req, res, next, me, them, data);
 		}
 	});
+
+	// var query = 'SELECT * FROM chats WHERE (user1=$1 AND user2=$2) OR (user1=$2 AND user2=$1)';
+	// conn.query(query, [user1, user2], function(err, data) {
+	// 	if (err) {
+	// 		console.error(err);
+	// 	} else if (data.rows.length === 0) {
+	// 		addChat(req, res, next, user1, user2);
+	// 	} else {
+	// 		console.log(data.rows);
+	// 		getMessages(req, res, next, user1, user2);
+	// 	}
+	// });
 });
 
-function addChat(req, res, next, user1, user2) {
+function getChat(req, res, next, user1, user2, data) {
+	if (chatExists(user2, data.chats)) {
+		getMessages(req, res, next, user1, user2, data);
+	} else {
+		addChat(req, res, next, user1, user2, data);
+	}
+}
+
+function chatExists(name, chats) {
+    var i;
+    for (i = 0; i < chats.length; i++) {
+        if (chats[i].username === name) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function addChat(req, res, next, user1, user2, render_data) {
 	var query = 'INSERT INTO chats (user1, user2, newest_msg) VALUES($1, $2, $3)';
 	conn.query(query, [user1, user2, -1], function(err, data) { 
 		if (err) {
 			console.log(err);
 		} else {
 			console.log("created a new chat with " + user2);
-			var render_data = {
-				"chats": ["Rita", "Beatriz", "Yunshu"],
-				"friends": ["Bob", "Alice"],
-				"user": {
-					"userName": "Send Help",
-					"age": 200,
-					"gender": "mystery",
-					"languages": [
-						{"name": "English", "native": true, "proficiency": 4},
-						{"name": "Chinese", "native": false, "proficiency": 2}
-					]
-				},
-				"messages": []
-			};
+			// var render_data = {
+			// 	"chats": ["Rita", "Beatriz", "Yunshu"],
+			// 	"friends": ["Bob", "Alice"],
+			// 	"user": {
+			// 		"userName": "Send Help",
+			// 		"age": 200,
+			// 		"gender": "mystery",
+			// 		"languages": [
+			// 			{"name": "English", "native": true, "proficiency": 4},
+			// 			{"name": "Chinese", "native": false, "proficiency": 2}
+			// 		]
+			// 	},
+			// 	"messages": []
+			// };
+			render_data.chats.push({username: user2});
+			render_data.messages = [];
 			res.render('chats', render_data);
 		}
 	});
 }
 
-function getMessages(req, res, next, user1, user2) {
+function getMessages(req, res, next, user1, user2, render_data) {
 	var query = 'SELECT * FROM messages WHERE (sender=$1 AND receiver=$2) OR (sender=$2 AND receiver=$1)';
 	conn.query(query, [user1, user2], function(err, data) {
 		if (err) {
 			console.error(err);
 		} else {
-			var render_data = {
-				"chats": ["Rita", "Beatriz", "Yunshu"],
-				"friends": ["Bob", "Alice"],
-				"user": {
-					"userName": "Send Help",
-					"age": 200,
-					"gender": "mystery",
-					"languages": [
-						{"name": "English", "native": true, "proficiency": 4},
-						{"name": "Chinese", "native": false, "proficiency": 2}
-					]
-				},
-				"messages": data.rows
-			};
-			console.log(data.rows);
+			// var render_data = {
+			// 	"chats": ["Rita", "Beatriz", "Yunshu"],
+			// 	"friends": ["Bob", "Alice"],
+			// 	"me": user1,
+			// 	"messages": data.rows
+			// };
+			render_data.messages = data.rows;
+			// console.log(data.rows);
 			res.render('chats', render_data);
 		}
 	});
@@ -357,7 +360,7 @@ app.get('/landing', function(request, response) {
 app.get('/', function(req, res, next) {
 	var username = req.session.username;
 	if (username) {
-		res.redirect('/chatlist');
+		res.redirect('/chats');
 	} else {
 		res.render('landing');
 	}

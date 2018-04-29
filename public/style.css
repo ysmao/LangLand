@@ -26,6 +26,10 @@ table, th, td {
     border-collapse: collapse;
 }
 
+a {
+	text-decoration: none;
+}
+
 /*
 ============================================ 
 		       LANDING PAGE
