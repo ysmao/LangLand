@@ -60,7 +60,6 @@ var hbs = exphbs.create({
 			return new handlebars.SafeString(bar += lang.language + '</span></li>');
 		},
 		chat_message: function(message, me) {
-			console.log("hi " + me);
 			var c = 'class="message ';
 			if (message.sender == me) {
 				c += 'my_message"';
@@ -77,6 +76,13 @@ var hbs = exphbs.create({
 				<img src="/edit_icon.png" width="17" height="17" alt="edit message"> \
 				</button>';
 				return new handlebars.SafeString(first_li + img + message_content + edit_button + '</li>');
+			}
+		},
+		chat_messages: function(data) {
+			console.log(data);
+			var messages_list = "";
+			for (message of data.messages) {
+				console.log(message);
 			}
 		}
     }
