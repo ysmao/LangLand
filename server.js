@@ -501,10 +501,32 @@ function saveMessage(req, res, next) {
 		if (error) {
 			console.error('ERROR: could not add message to table');
 		}
-		console.log(345);
-		console.log(message_body);
-		console.log(sender);
 	});
+}
+
+function saveMessage(val) {
+	// console.log("saving through socket");
+	var message_body = val.message;
+	var time = val.time;
+	var sender = val.sender;
+	var receiver = val.receiver;
+
+	conn.query('INSERT INTO messages (sender, receiver, body, time, correction, translation) VALUES($1, $2, $3, $4, $5, $6)', [sender, receiver, message_body, time, "", ""], function(error, data) {
+		if (error) {
+			console.error('ERROR: could not add message to table');
+		}
+	});
+}
+
+function sendMessage(val) {
+	var query = 'SELECT chat_id FROM chats WHERE (user1=$1 AND user2=$2) OR (user1=$2 AND user2=$1)';
+	conn.query(query, [val.sender, val.receiver], function(err, data) {
+		if (err) {
+			console.error(err);
+		} else {
+			io.sockets.in(data.rows[0].chat_id).emit('message', val);
+		}
+	})
 }
 
 function correctMessage(req, res, next) {
@@ -611,44 +633,37 @@ function joinChatroom1(roomname, nickname) {
 
 console.log(100);
 io.sockets.on('connection', function(socket) {
-	console.log(111);
-	socket.on('join', function(roomName, nickname, callback) {
+	socket.on('join', function(nickname, callback) {
 		//socket.join(roomName);
 		socket.nickname = nickname;
-		socket.roomName = roomName;
 		conn.query('SELECT * FROM chats WHERE user1=$1 OR user2=$1', [nickname], function(error, data) {
 			if (error) {
 				console.error(error);
 			} else {
+				var rooms = data.rows;
 				for(var i = 0; i < rooms.length; i++) {
     				var room = rooms[i];
-    				socket.join(room, () => {
-    					let alljoinedrooms = Object.keys(socket.rooms);
-    					console.log(alljoinedrooms);
-  					});
-    				joinChatroom(socket, room, callback);
-    				console.log(room.id);
+    				socket.join(room.chat_id);
+    				// joinChatroom(socket, room, callback);
+    				console.log(room.chat_id);
 				}
+				callback("hi");
 			}
 		});
 
-		conn.query('SELECT * from messages WHERE (sender=$1 OR receiver=$1) AND time<>$2', [roomName, 0], function(error, data) {
-	    	var messages = data.rows;
-	    	if (error) {
-	    		console.error(error);
-	    	}
-			callback(messages);
-	    });
+		// conn.query('SELECT * from messages WHERE (sender=$1 OR receiver=$1) AND time<>$2', [roomName, 0], function(error, data) {
+	 //    	var messages = data.rows;
+	 //    	if (error) {
+	 //    		console.error(error);
+	 //    	}
+		// 	callback(messages);
+	 //    });
 	});
 
 	socket.on('message', function(val) {
-		var roomName = socket.roomName;
-		var nickname = val.nickname;
-		var message = val.body;
-		var time = val.time;
-		saveMessage(roomName, nickname, message, time);
-		console.log(val.body);
-		io.sockets.in(roomName).emit('message', [val]);
+		saveMessage(val);
+		console.log("sending message");
+		sendMessage(val);
 	});
 
 
