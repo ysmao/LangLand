@@ -5,6 +5,9 @@
 
 
 $(document).ready(function() {
+	$('.edit_button').click(function(event) {
+		console.log($(this).attr('id'));
+	});
 
 	$('#new_message').submit(function(event) {
 		event.preventDefault();

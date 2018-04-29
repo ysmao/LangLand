@@ -72,7 +72,6 @@ $(document).ready(function() {
 	    	}
 		});
 		if (form.valid()) {
-			console.log("why is this valid");
 			$('#signup_pt_two').css('display', 'inline-flex');
 			$('#signup_pt_one').hide();
 
@@ -85,7 +84,6 @@ $(document).ready(function() {
 		event.preventDefault();
 
 		if ($('#signup_form').valid()) {
-			console.log("uhhhh");
 			var username = $('#signup_username').val();
 		    var password = $('#signup_password').val();
 		    var email = $('#signup_email').val();

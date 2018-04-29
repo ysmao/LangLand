@@ -72,17 +72,10 @@ var hbs = exphbs.create({
 				return new handlebars.SafeString(first_li + message_content + '</li>');
 			} else {
 				var img = '<img src="/placeholder.png" alt="' + message.sender + '" class="avatar">';
-				var edit_button = '<button class="edit_button"> \
+				var edit_button = '<button class="edit_button" id="' + message.message_id + '"> \
 				<img src="/edit_icon.png" width="17" height="17" alt="edit message"> \
 				</button>';
 				return new handlebars.SafeString(first_li + img + message_content + edit_button + '</li>');
-			}
-		},
-		chat_messages: function(data) {
-			console.log(data);
-			var messages_list = "";
-			for (message of data.messages) {
-				console.log(message);
 			}
 		}
     }
@@ -377,12 +370,6 @@ app.post('/signup', saveUser);
 // login
 app.post('/login', loginUser);
 
-// load user profile
-app.post('/load-profile', loadProfile);
-
-// load chat
-app.post('/load-chat', loadChat);
-
 // save message
 app.post('/chats/save', saveMessage);
 
@@ -501,28 +488,6 @@ function loginUser(req, res, next) {
 			res.send("success");
 		}
 	});
-}
-
-function loadProfile(req, res, next) {
-	var username = req.body.username;
-
-	// request the user's information
-
-	// built user object with the returned info
-
-	// reload the whole damn page w the new info i guess
-	res.send("success");
-}
-
-function loadChat(req, res, next) {
-	var username = req.body.username;
-
-	// request the user's information
-
-	// built user object with the returned info
-
-	// reload the whole damn page w the new info i guess
-	res.send("success");
 }
 
 function saveMessage(req, res, next) {
