@@ -491,6 +491,7 @@ a {
 
 #chat_display {
 	flex-grow: 1;
+	overflow: auto;
 }
 
 .avatar {
@@ -719,6 +720,7 @@ a {
 */
 #results_display {
 	flex-grow: 1;
+	overflow: auto;
 }
 
 .search_result {
@@ -765,7 +767,7 @@ a {
 	background-color: #429AA8;
 }
 
-.current_friend, .current_chat {
+.current {
 	background-color: #54A5B3 !important;
 }
 

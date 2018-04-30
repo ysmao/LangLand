@@ -12,6 +12,11 @@ $(document).ready(function() {
 	});
 
 	socket.on("message", function(val) {
+		if (val.sender == me) {
+			addMyMessage(val);
+		} else {
+			addYourMessage(val);
+		}
 		console.log(val.message);
 	});
 
@@ -67,3 +72,25 @@ $(document).ready(function() {
 	//     });
 	// });
 });
+
+function addMyMessage(val) {
+	var first_li = '<li class="message my_message">';
+	var msg_content = '<div class="message_content">' + val.message + '</div>';
+
+	var rendered_message = first_li + msg_content + '</li>';
+
+	$('#messages_list').append(rendered_message);
+}
+
+function addYourMessage(val) {
+	var first_li = '<li class="message your_message">';
+	var img = '<img src="/placeholder.png" alt="' + val.sender + '" class="avatar">';
+	var msg_content = '<div class="message_content">' + val.message + '</div>';
+	var edit_button = '<button class="edit_button"> \
+		<img src="/edit_icon.png" width="17" height="17" alt="edit message"> \
+		</button>';
+
+	var rendered_message = first_li + img + msg_content + edit_button + '</li>';
+
+	$('#messages_list').append(rendered_message);
+}
