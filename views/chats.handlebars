@@ -38,7 +38,9 @@
 
 			<div class="leftover_space">
 				<div id="chat_content">
-					{{> chat_room messages=messages me=myUsername}}
+					{{#if chat_id}}
+						{{> chat_room messages=messages me=myUsername}}
+					{{/if}}
 				</div>
 			</div>
 		</div>

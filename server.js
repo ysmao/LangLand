@@ -274,25 +274,27 @@ function getChats(me, chats) {
 app.get('/chats/:user', function(req, res, next) {
 	var me = req.session.username;
 	var them = req.params.user;
-	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
+	var query = 'SELECT chat_id,user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
 	conn.query(query, [me], function(err, data) {
 		if (err) {
 			console.error(err);
 		} else {
-			var data = {
+			var render_data = {
 				"myUsername": me,
 				"chats": getChats(me, data.rows)
 			};
-			getChat(req, res, next, me, them, data);
+			getChat(req, res, next, me, them, data.rows, render_data);
 		}
 	});
 });
 
-function getChat(req, res, next, user1, user2, data) {
-	if (chatExists(user2, data.chats)) {
-		getMessages(req, res, next, user1, user2, data);
+function getChat(req, res, next, user1, user2, data, render_data) {
+	var chatID = chatExists(user2, render_data.chats);
+	if (chatID != -1) {
+		render_data.chat_id = data[chatID].chat_id;
+		getMessages(req, res, next, user1, user2, render_data);
 	} else {
-		addChat(req, res, next, user1, user2, data);
+		addChat(req, res, next, user1, user2, render_data);
 	}
 }
 
@@ -300,11 +302,11 @@ function chatExists(name, chats) {
     var i;
     for (i = 0; i < chats.length; i++) {
         if (chats[i].username === name) {
-            return true;
+            return i;
         }
     }
 
-    return false;
+    return -1;
 }
 
 function addChat(req, res, next, user1, user2, render_data) {
@@ -313,9 +315,17 @@ function addChat(req, res, next, user1, user2, render_data) {
 		if (err) {
 			console.log(err);
 		} else {
-			render_data.chats.push({username: user2});
-			render_data.messages = [];
-			res.render('chats', render_data);
+			query = 'SELECT chat_id FROM chats WHERE user1=$1 AND user2=$2';
+			conn.query(query, [user1, user2], function(err, data) {
+				if (err) {
+					console.error(err);
+				} else {
+					render_data.chat_id = data.rows[0].chat_id;
+					render_data.chats.push({username: user2});
+					render_data.messages = [];
+					res.render('chats', render_data);
+				}
+			});
 		}
 	});
 }
@@ -331,23 +341,6 @@ function getMessages(req, res, next, user1, user2, render_data) {
 		}
 	});
 }
-
-// app.get('/addmessages', function(req, res, next) {
-// 	var query = 'INSERT INTO messages (sender, receiver, body, time) VALUES($1, $2, $3, $4)';
-// 	conn.query(query, ["rding", "chip", "hellooooo", 100], function(err, data) {
-// 		if (err) {
-// 			console.error(err);
-// 		} else {
-// 			conn.query(query, ["chip", "rding", "hi there!", 200], function(err, data) {
-// 				if (err) {
-// 					console.error(err);
-// 				} else {
-// 					res.send('yay');
-// 				}
-// 			});
-// 		}
-// 	});
-// });
 
 app.get('/search', getAllUsers);
 
@@ -491,7 +484,6 @@ function loginUser(req, res, next) {
 }
 
 function saveMessage(req, res, next) {
-	console.log("saving");
 	var message_body = req.body.message;
 	var time = req.body.time;
 	var sender = req.body.sender;
@@ -505,7 +497,6 @@ function saveMessage(req, res, next) {
 }
 
 function saveMessage(val) {
-	// console.log("saving through socket");
 	var message_body = val.message;
 	var time = val.time;
 	var sender = val.sender;
@@ -559,78 +550,6 @@ function transMessage(req, res, next) {
 	});
 }
 
-// will need this function?
-// function saveMessage(chat, username, message, time) {
-// 	// below is old code for realtime
-// 	conn.query('INSERT INTO messages (room, nickname, body, time) VALUES($1, $2, $3, $4)', [roomName, nickname, message, time], function(error, data) {
-// 		if (error) {
-// 			console.error('ERROR: could not add message to table');
-// 		}
-// 	});
-// }
-
-// discarded. moved to sockets
-// function joinChatrooms(username, rooms){
-// 	for(var i = 0; i < rooms.length; i++) {
-//     var room = rooms[i];
-//     socket.join(room, () => {
-//     let alljoinedrooms = Object.keys(socket.rooms);
-//     console.log(alljoinedrooms);
-//   	});
-
-//     console.log(room.id);
-// }
-// }
-
-//server join
-function joinChatroom(socket, roomdata, callback) {
-
-    if (!roomdata.chat_id) {
-        console.log('err id');
-        return false;
-    }
-    
-    if (!roomdata.user1) {
-        console.log('err user1');
-        return false;
-    }
-
-    if (!roomdata.user2) {
-        console.log('err user2');
-        return false;
-    }
-    
-    socket.join(roomdata.roomname);
-    socket.chat_id = roomdata.chat_id;
-    socket.user1 = roomdata.user1;
-    socket.user2 = roomdata.user2;
-    //callback response...
-
-}
-
-//client emit. not sure where to put this function yet.
-function joinChatroom1(roomname, nickname) {
-    var data = {roomname: roomname, username: nickname};
-    socket.emit('join', data, function(response) {
-        console.log(response);
-        if (response.status === 200) {
-
-        }
-    });
-}
-
-// function generateRoomIdentifier() {
-// 	// make a list of legal characters
-// 	// we're intentionally excluding 0, O, I, and 1 for readability
-// 	var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-
-// 	var result = '';
-// 	for (var i = 0; i < 6; i++)
-// 	result += chars.charAt(Math.floor(Math.random() * chars.length));
-
-// 	return result;
-// }
-
 console.log(100);
 io.sockets.on('connection', function(socket) {
 	socket.on('join', function(nickname, callback) {
@@ -644,20 +563,10 @@ io.sockets.on('connection', function(socket) {
 				for(var i = 0; i < rooms.length; i++) {
     				var room = rooms[i];
     				socket.join(room.chat_id);
-    				// joinChatroom(socket, room, callback);
-    				console.log(room.chat_id);
 				}
 				callback("hi");
 			}
 		});
-
-		// conn.query('SELECT * from messages WHERE (sender=$1 OR receiver=$1) AND time<>$2', [roomName, 0], function(error, data) {
-	 //    	var messages = data.rows;
-	 //    	if (error) {
-	 //    		console.error(error);
-	 //    	}
-		// 	callback(messages);
-	 //    });
 	});
 
 	socket.on('message', function(val) {
@@ -665,93 +574,6 @@ io.sockets.on('connection', function(socket) {
 		console.log("sending message");
 		sendMessage(val);
 	});
-
-
-	// // clients emit this when they join new rooms
-	// socket.on('join', function(roomName, nickname, callback) {
-	// 	socket.join(roomName);
-	// 	socket.nickname = nickname;
-	// 	socket.roomName = roomName;
-
-	// 	// update the user list
-	// 	conn.query('INSERT INTO users (nickname, room) VALUES($1, $2)', [nickname, roomName], function(error, data) {
-	// 		if (error) {
-	// 			console.error(error);
-	// 		} else {
-	// 			conn.query('SELECT * from users WHERE room=$1', [roomName], function(error, data) {
-	// 				if (error) {
-	// 					console.log(error);
-	// 				} else {
-	// 					io.sockets.in(roomName).emit('membershipChanged', data.rows);
-	// 				}
-	// 			});
-	// 		}
-	// 	});
-
-	// 	// send messages to user
-	// 	conn.query('SELECT * from messages WHERE room=$1 AND time<>$2', [roomName, 0], function(error, data) {
-	//     	var messages = data.rows;
-	//     	if (error) {
-	//     		console.error(error);
-	//     	}
-	// 		callback(messages);
-	//     });
-	// });
-
-	// // this gets emitted if a user changes their nickname
-	// socket.on('nickname', function(nickname) {
-	// 	var oldname = socket.nickname;
-	// 	var roomName = socket.roomName;
-	// 	socket.nickname = nickname;
-
-	// 	// update user list
-	// 	conn.query('UPDATE users SET nickname=$1 WHERE nickname=$2 AND room=$3', [nickname, oldname, roomName], function(error, data) {
-	// 		if (error) {
-	// 			console.log(error);
-	// 		} else {
-	// 			conn.query('SELECT * from users WHERE room=$1', [roomName], function(error, data) {
-	// 				if (error) {
-	// 					console.log(error);
-	// 				} else {
-	// 					io.sockets.in(roomName).emit('membershipChanged', data.rows);
-	// 				}
-	// 			});
-	// 		}
-	// 	});
-	// });
-
-	// // clients emit this when they want to send a message
-	// socket.on('message', function(val) {
-	// 	var roomName = socket.roomName;
-	// 	var nickname = val.nickname;
-	// 	var message = val.body;
-	// 	var time = val.time;
-
-	// 	saveMessage(roomName, nickname, message, time);
-
-	// 	io.sockets.in(roomName).emit('message', [val]);
-	// });
-
-	// // client disconnected
-	// socket.on('disconnect', function() {
-	// 	var nickname = socket.nickname;
-	// 	var roomName = socket.roomName;
-
-	// 	// delete user and update list
-	// 	conn.query('DELETE FROM users WHERE nickname=$1 AND room=$2', [nickname, roomName], function(error, data) {
-	// 		if (error) {
-	// 			console.log(error);
-	// 		} else {
-	// 			conn.query('SELECT * from users WHERE room=$1', [roomName], function(error, data) {
-	// 				if (error) {
-	// 					console.log(error);
-	// 				} else {
-	// 					io.sockets.in(roomName).emit('membershipChanged', data.rows);
-	// 				}
-	// 			});
-	// 		}
-	// 	});
-	// });
 
 	// error
 	socket.on('error', function() {
