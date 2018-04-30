@@ -366,6 +366,9 @@ app.post('/login', loginUser);
 // save message
 app.post('/chats/save', saveMessage);
 
+// edit message
+app.post('/chats/edit', editMessage);
+
 // correct message
 app.post('/chats/correct', correctMessage);
 
@@ -484,6 +487,7 @@ function loginUser(req, res, next) {
 }
 
 function saveMessage(req, res, next) {
+	console.log("saving");
 	var message_body = req.body.message;
 	var time = req.body.time;
 	var sender = req.body.sender;
@@ -493,7 +497,60 @@ function saveMessage(req, res, next) {
 		if (error) {
 			console.error('ERROR: could not add message to table');
 		}
+		console.log(345);
+		console.log(message_body);
+		console.log(sender);
 	});
+}
+
+
+function editMessage(req, res, next) {
+	console.log("edit saving");
+	var correction = req.body.message;
+	var time = req.body.time;
+	var sender = req.body.sender;
+	var receiver = req.body.receiver;
+	var id = req.body.mid;
+
+	conn.query('SELECT body FROM messages WHERE message_id=$1', [id], function(err, data) {
+		if (err) {
+			res.send("error");
+			console.error(err);
+		} else if (data.rows.length === 0) {
+			console.log("cannot find this message");
+			res.send("looking for original message failed");
+		} else {
+			editMessage1(req, res, next, err, data);
+		}
+		//console.log(data);
+	});
+}
+
+function editMessage1(req, res, next, err, data) {
+	console.log("cai");
+	var correction = req.body.message;
+	var time = req.body.time;
+	var sender = req.body.sender;
+	var receiver = req.body.receiver;
+	var id = req.body.mid;
+	res.json(data.rows);
+	var orig_msg = data.rows[0].body;
+	console.log(orig_msg);
+	console.log(correction);
+
+	conn.query('INSERT INTO messages (sender, receiver, body, time, correction, translation) VALUES($1, $2, $3, $4, $5, $6)', [sender, receiver, orig_msg, time, correction, ""], function(error, data) {
+		if (error) {
+			console.error('ERROR: could not add edited message to table');
+		}
+	});
+	// conn.query('UPDATE messages SET correction=$1 WHERE message_id=$2', [message_body, id], function(error, data) {
+	// 	console.log(id);
+	// 	console.log(message_body);
+	// 	if (error) {
+	// 		console.error('ERROR: could not add corrected message to table');
+	// 	}
+
+	// });
 }
 
 function saveMessage(val) {
