@@ -22,13 +22,7 @@ $(document).ready(function() {
 				signup_native: {
 					required: true
 				},
-				native_lang: {
-					required: true
-				},
 				signup_learning: {
-					required: true
-				},
-				learning_lang: {
 					required: true
 				},
 				errorPlacement: function(error, element) {
@@ -56,14 +50,8 @@ $(document).ready(function() {
 				signup_native: {
 					required: "Please select a language"
 				},
-				native_lang: {
-					requried: "Please select a proficiency"
-				},
 				signup_learning: {
 					required: "Please select a language"
-				},
-				learning_lang: {
-					requried: "Please select a proficiency"
 				}
 			},
 			errorPlacement: function(label, element) {

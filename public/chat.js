@@ -7,6 +7,8 @@ var editing = false;
 $(document).ready(function() {
 	editing = false;
 	var me = $('#message_sender').val();
+	var pathname = window.location.pathname.split( '/' );
+	var otherPerson = pathname[2];
 
 	socket.emit("join", me, function(something) {
 		console.log(something);
@@ -15,7 +17,7 @@ $(document).ready(function() {
 	socket.on("message", function(val) {
 		if (val.sender == me) {
 			addMyMessage(val);
-		} else {
+		} else if (val.receiver == otherPerson) {
 			addYourMessage(val);
 		}
 		console.log(val.message);
