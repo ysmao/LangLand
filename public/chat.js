@@ -1,10 +1,11 @@
 var socket = io.connect();
-
+var editing = false;
 // var anyDB = require('./server.js');
 // var conn = anyDB.createConnection('sqlite3://langland.db');
 
 
 $(document).ready(function() {
+	editing = false;
 	var me = $('#message_sender').val();
 
 	socket.emit("join", me, function(something) {
@@ -21,10 +22,29 @@ $(document).ready(function() {
 	});
 
 	$('.edit_button').click(function(event) {
+		editing =true;
 		console.log($(this).attr('id'));
+		var mid = $(this).attr('id');
+
+		$('#new_message').submit(function(event) {
+			var pathname = window.location.pathname.split( '/' );
+
+			var message = $('#message_box').val();
+			var time = new Date().getTime();
+			var sender = $('#message_sender').val();
+			var receiver = pathname[2];
+			console.log(666);
+
+    		$.post('/chats/edit', {message:message, time:time, sender:sender, receiver:receiver, mid:mid}, function(res){
+        	//you might want to add callback function that is executed post request success
+        		console.log('edited msg sent');
+    		});
+
+    	});
 	});
 
 	$('#new_message').submit(function(event) {
+		if(editing===false){
 		event.preventDefault();
 
 		var pathname = window.location.pathname.split( '/' );
@@ -43,7 +63,7 @@ $(document).ready(function() {
 		socket.emit('message', {message:message, time:time, sender:sender, receiver:receiver}, function(val) {
 			console.log(val);
 		});
-
+}
 	});
 
 	$('.correct').click(function(event){
