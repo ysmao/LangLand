@@ -582,6 +582,41 @@ a {
 
 /*
 ============================================ 
+		    	EDIT MODALS
+============================================ 
+*/
+.modal {
+	display: none;
+    position: fixed;
+    z-index: 3;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);	
+}
+
+.modal_content {
+	background-color: white;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+}
+
+.modal_button {
+	width: 100px;
+	height: 60px;
+
+	border: none;
+}
+
+.modal_button:hover {
+	background-color: pink;
+}
+
+/*
+============================================ 
 		   		 FILTERS TAB
 ============================================ 
 */
