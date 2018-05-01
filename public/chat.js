@@ -26,6 +26,11 @@ $(document).ready(function() {
 	$('.edit_button').click(function(event) {
 		editing =true;
 		console.log($(this).attr('id'));
+
+		$("#edit_modal_content").css({top: event.pageY, left: event.pageX});
+
+		$('#edit_modal').show();
+
 		var mid = $(this).attr('id');
 
 		$('#new_message').submit(function(event) {
@@ -83,6 +88,14 @@ $(document).ready(function() {
         	console.log('msg sent');
     	});
 	});
+
+
+	window.onclick = function(event) {
+        if (event.target == document.getElementById('edit_modal')) {
+            console.log("modal click");
+            event.target.style.display = "none";
+        }
+    }
 
 	// $('.friend').click(function(event) {
 	// 	var username = $(this).attr('id');
