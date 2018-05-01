@@ -1,5 +1,7 @@
 var socket = io.connect();
 var editing = false;
+
+var edit_id = 0;
 // var anyDB = require('./server.js');
 // var conn = anyDB.createConnection('sqlite3://langland.db');
 
@@ -25,13 +27,16 @@ $(document).ready(function() {
 
 	$('.edit_button').click(function(event) {
 		editing =true;
-		console.log($(this).attr('id'));
+
+		edit_id = ($(this).attr('id'));
+
+		msg_content_id = '#message_' + edit_id;
+
+		console.log($(msg_content_id).html());
 
 		$("#edit_modal_content").css({top: event.pageY, left: event.pageX});
 
 		$('#edit_modal').show();
-
-		var mid = $(this).attr('id');
 
 		$('#new_message').submit(function(event) {
 			var pathname = window.location.pathname.split( '/' );
@@ -42,7 +47,7 @@ $(document).ready(function() {
 			var receiver = pathname[2];
 			console.log(666);
 
-    		$.post('/chats/edit', {message:message, time:time, sender:sender, receiver:receiver, mid:mid}, function(res){
+    		$.post('/chats/edit', {message:message, time:time, sender:sender, receiver:receiver, mid:edit_id}, function(res){
         	//you might want to add callback function that is executed post request success
         		console.log('edited msg sent');
     		});
@@ -110,7 +115,8 @@ $(document).ready(function() {
 
 function addMyMessage(val) {
 	var first_li = '<li class="message my_message">';
-	var msg_content = '<div class="message_content">' + val.message + '</div>';
+	var first_msg_content = '<div class="message_content" id="' + message.m_id + '">'
+	var msg_content = first_msg_content + val.message + '</div>';
 
 	var rendered_message = first_li + msg_content + '</li>';
 
@@ -120,10 +126,11 @@ function addMyMessage(val) {
 function addYourMessage(val) {
 	var first_li = '<li class="message your_message">';
 	var img = '<img src="/placeholder.png" alt="' + val.sender + '" class="avatar">';
-	var msg_content = '<div class="message_content">' + val.message + '</div>';
-	var edit_button = '<button class="edit_button"> \
-		<img src="/edit_icon.png" width="17" height="17" alt="edit message"> \
-		</button>';
+	var first_msg_content = '<div class="message_content" id="' + message.m_id + '">'
+	var msg_content = first_msg_content + val.message + '</div>';
+
+	var edit_button = '<button class="edit_button" id="' + message.m_id + '"> \
+		<img src="/edit_icon.png" width="17" height="17" alt="edit message"></button>';
 
 	var rendered_message = first_li + img + msg_content + edit_button + '</li>';
 

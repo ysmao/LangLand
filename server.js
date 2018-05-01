@@ -67,9 +67,10 @@ var hbs = exphbs.create({
 				c += 'your_message"';
 			}
 			var first_li = '<li ' + c + '>'
-			var message_content = '<div class="message_content">' + message.body + '</div>';
+			var first_msg_content = '<div class="message_content" id="message_' + message.message_id + '">'
+			var message_content = first_msg_content + message.body + '</div>';
 			if (message.correction != "") {
-				message_content = '<div class="message_content">' + message.body + '<br>' + message.correction + '</div>';
+				message_content = first_msg_content + message.body + '<br>' + message.correction + '</div>';
 			}
 			if (message.sender == me) {
 				return new handlebars.SafeString(first_li + message_content + '</li>');
@@ -89,15 +90,6 @@ app.set('view engine', 'handlebars');
 
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/image_resources'));
-
-function language(lang) {
-
-}
-
-var hbs = exphbs.create({
-    // Specify helpers which are only registered on this instance.
-    helpers: {language_bar: function(){return "Hello";}}
-});
 
 // create tables
 conn.query('CREATE TABLE IF NOT EXISTS messages ( \
