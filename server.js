@@ -623,7 +623,16 @@ function sendMessage(val) {
 		if (err) {
 			console.error(err);
 		} else {
-			io.sockets.in(data.rows[0].chat_id).emit('message', val);
+			var chat_id = data.rows[0].chat_id;
+			query = 'SELECT message_id FROM messages WHERE body=$1';
+			conn.query(query, [val.message], function(err, data) {
+				if (err) {
+					console.error(err);
+				} else {
+					val.m_id = data.rows[0].message_id;
+					io.sockets.in(chat_id).emit('message', val);
+				}
+			});
 		}
 	});
 }
@@ -635,7 +644,16 @@ function sendCorrection(val) {
 		if (err) {
 			console.error(err);
 		} else {
-			io.sockets.in(data.rows[0].chat_id).emit('correction', val);
+			var chat_id = data.rows[0].chat_id;
+			query = 'SELECT message_id FROM messages WHERE correction=$1';
+			conn.query(query, [val.correction], function(err, data) {
+				if (err) {
+					console.error(err);
+				} else {
+					val.m_id = data.rows[0].message_id;
+					io.sockets.in(chat_id).emit('correction', val);
+				}
+			});
 		}
 	});
 }
