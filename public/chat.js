@@ -170,7 +170,6 @@ function addYourMessage(val) {
 	}
 }
 
-
 function correctMessage() {
 	console.log("correcting");
 	correct = true;
