@@ -30,10 +30,12 @@
 				<div class="tab_content selected" id="friends_tab_content">
 					<input type="text" class="searchbar" id="friends_list_search" placeholder="Search friends"/>
 					<ul id="friends_list">
-						<li class="friend you" id="{{myUsername}}">
-							<img src="/placeholder.png" alt="You">
-							<span class="friend_name">You</span>
-						</li>
+						<a href="/friends/{{myUsername}}">
+							<li class="friend you" id="{{myUsername}}">
+								<img src="/placeholder.png" alt="{{myUsername}}">
+								<span class="friend_name">You</span>
+							</li>
+						</a>
 						{{#each friends as |name|}}
 							{{> friend friendName=name.username}}
 						{{/each}}
