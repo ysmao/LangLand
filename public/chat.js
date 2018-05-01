@@ -2,6 +2,8 @@ var socket = io.connect();
 var editing = false;
 
 var edit_id = 0;
+var translate = false;
+var correct = false;
 // var anyDB = require('./server.js');
 // var conn = anyDB.createConnection('sqlite3://langland.db');
 
@@ -166,4 +168,22 @@ function addYourMessage(val) {
 	if(isScrolledToBottom) {
 	    chat.scrollTop = chat.scrollHeight - chat.clientHeight;
 	}
+}
+
+
+function correctMessage() {
+	console.log("correcting");
+	correct = true;
+
+	msg_content_id = '#message_' + edit_id;
+	$('#message_box').val( $(msg_content_id).html());
+
+	$('#edit_modal').hide();
+}
+
+function translateMessage() {
+	console.log("translating");
+	translate = true;
+
+	$('#edit_modal').hide();
 }
