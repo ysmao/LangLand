@@ -499,13 +499,13 @@ function saveMessage(req, res, next) {
 }
 
 
-function editMessage(req, res, next) {
+function editMessage(val) {
 	console.log("edit saving");
-	var correction = req.body.message;
-	var time = req.body.time;
-	var sender = req.body.sender;
-	var receiver = req.body.receiver;
-	var id = req.body.mid;
+	var correction = val.message;
+	var time = val.time;
+	var sender = val.sender;
+	var receiver = val.receiver;
+	var id = val.m_id;
 
 	conn.query('SELECT body FROM messages WHERE message_id=$1', [id], function(err, data) {
 		if (err) {
@@ -515,20 +515,20 @@ function editMessage(req, res, next) {
 			console.log("cannot find this message");
 			res.send("looking for original message failed");
 		} else {
-			editMessage1(req, res, next, err, data);
+			editMessage1(val, err, data);
 		}
 		//console.log(data);
 	});
 }
 
-function editMessage1(req, res, next, err, data) {
+function editMessage1(val, err, data) {
 	console.log("cai");
-	var correction = req.body.message;
-	var time = req.body.time;
-	var sender = req.body.sender;
-	var receiver = req.body.receiver;
-	var id = req.body.mid;
-	res.json(data.rows);
+	var correction = val.message;
+	var time = val.time;
+	var sender = val.sender;
+	var receiver = val.receiver;
+	var id = val.m_id;
+	//res.json(data.rows);
 	var orig_msg = data.rows[0].body;
 	console.log(orig_msg);
 	console.log(correction);
@@ -626,7 +626,11 @@ io.sockets.on('connection', function(socket) {
 		console.log("sending message");
 		sendMessage(val);
 	});
-
+	socket.on('correction', function(val) {
+		editMessage(val);
+		console.log("sending message");
+		sendMessage(val);
+	});
 	// error
 	socket.on('error', function() {
 		console.log('ERROR: socket error');
