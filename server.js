@@ -68,6 +68,9 @@ var hbs = exphbs.create({
 			}
 			var first_li = '<li ' + c + '>'
 			var message_content = '<div class="message_content">' + message.body + '</div>';
+			if (message.correction != "") {
+				message_content = '<div class="message_content">' + message.body + '<br>' + message.correction + '</div>';
+			}
 			if (message.sender == me) {
 				return new handlebars.SafeString(first_li + message_content + '</li>');
 			} else {
