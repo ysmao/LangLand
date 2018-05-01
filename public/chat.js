@@ -23,10 +23,14 @@ $(document).ready(function() {
 		console.log(val.message);
 	});
 
+	socket.on("correction", function(val) {
+
+	});
+
 	$('.edit_button').click(function(event) {
 		editing =true;
 		console.log($(this).attr('id'));
-		var mid = $(this).attr('id');
+		var m_id = $(this).attr('id');
 
 		$('#new_message').submit(function(event) {
 			var pathname = window.location.pathname.split( '/' );
@@ -37,9 +41,14 @@ $(document).ready(function() {
 			var receiver = pathname[2];
 			console.log(666);
 
-    		$.post('/chats/edit', {message:message, time:time, sender:sender, receiver:receiver, mid:mid}, function(res){
-        	//you might want to add callback function that is executed post request success
-        		console.log('edited msg sent');
+			$('#new_message')[0].reset();
+    		// $.post('/chats/edit', {message:message, time:time, sender:sender, receiver:receiver, m_id:m_id}, function(res){
+      //   	//you might want to add callback function that is executed post request success
+      //   		console.log('edited msg sent');
+    		// });
+
+    		socket.emit('correction', {message:message, time:time, sender:sender, receiver:receiver, m_id:m_id}, function(val) {
+    			console.log(val);
     		});
 
     	});
@@ -56,7 +65,7 @@ $(document).ready(function() {
 		var sender = $('#message_sender').val();
 		var receiver = pathname[2];
 		
-		//$('#new_message')[0].reset(); //go back to default
+		$('#new_message')[0].reset(); //go back to default
     	// $.post('/chats/save', {message:message, time:time, sender:sender, receiver:receiver}, function(res){
      //    	//you might want to add callback function that is executed post request success
      //    	console.log('msg sent');
