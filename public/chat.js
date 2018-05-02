@@ -112,7 +112,6 @@ $(document).ready(function() {
 
 	window.onclick = function(event) {
         if (event.target == document.getElementById('edit_modal')) {
-            console.log("modal click");
             event.target.style.display = "none";
         }
     }

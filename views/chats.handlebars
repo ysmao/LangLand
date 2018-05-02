@@ -20,12 +20,16 @@
 		<div class="main_content">
 			<div class="chats_friends">
 				<div class="tabs">
-					<button class="tab selected" id="chats_tab" onclick="toggleChatsTab()">
-						<img src="/chats_icon.png" alt="Chats" width=55 height=55>
-					</button>
-					<button class="tab" id="friends_tab" onclick="toggleFriendsTab()">
-						<img src="/friends_icon.png" alt="Friends" width=50 height=50>
-					</button>
+					<a href="/chats">
+						<div class="tab" id="chats_tab">
+							<img src="/chats_icon.png" alt="Chats" width=55 height=55>
+						</div>
+					</a>
+					<a href="/friends/{{myUsername}}">
+						<div class="tab selected" id="friends_tab">
+							<img src="/friends_icon.png" alt="Friends" width=50 height=50>
+						</div>
+					</a>
 				</div>
 				<div class="tab_content selected" id="chats_tab_content">
 					<ul id="chats_list">

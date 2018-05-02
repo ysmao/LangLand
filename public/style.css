@@ -292,7 +292,9 @@ a {
 	padding: 0;
 	margin-top: 2px;
 
-	display: block;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
 	background-color: #A7D5D9;
 	border: none;
