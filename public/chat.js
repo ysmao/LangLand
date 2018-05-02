@@ -137,7 +137,7 @@ function addMyMessage(val) {
 	var isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1;
 
 	var first_li = '<li class="message my_message">';
-	var first_msg_content = '<div class="message_content" id="' + message.m_id + '">'
+	var first_msg_content = '<div class="message_content" id="' + val.m_id + '">'
 	var msg_content = first_msg_content + val.message + '</div>';
 
 	var rendered_message = first_li + msg_content + '</li>';
