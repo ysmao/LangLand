@@ -60,7 +60,7 @@ $(document).ready(function() {
       //   	//you might want to add callback function that is executed post request success
       //   		console.log('edited msg sent');
     		// });
-
+    		
     		socket.emit('correction', {message:message, time:time, sender:sender, receiver:receiver, m_id:edit_id}, function(val) {
     			console.log(val);
     		});
@@ -137,7 +137,7 @@ function addMyMessage(val) {
 	var isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1;
 
 	var first_li = '<li class="message my_message">';
-	var first_msg_content = '<div class="message_content" id="' + message.m_id + '">'
+	var first_msg_content = '<div class="message_content" id="' + val.m_id + '">'
 	var msg_content = first_msg_content + val.message + '</div>';
 
 	var rendered_message = first_li + msg_content + '</li>';
@@ -155,10 +155,10 @@ function addYourMessage(val) {
 
 	var first_li = '<li class="message your_message">';
 	var img = '<img src="/placeholder.png" alt="' + val.sender + '" class="avatar">';
-	var first_msg_content = '<div class="message_content" id="' + message.m_id + '">'
+	var first_msg_content = '<div class="message_content" id="' + val.m_id + '">'
 	var msg_content = first_msg_content + val.message + '</div>';
 
-	var edit_button = '<button class="edit_button" id="' + message.m_id + '"> \
+	var edit_button = '<button class="edit_button" id="' + val.m_id + '"> \
 		<img src="/edit_icon.png" width="17" height="17" alt="edit message"></button>';
 
 	var rendered_message = first_li + img + msg_content + edit_button + '</li>';
