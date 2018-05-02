@@ -365,10 +365,10 @@ app.post('/chats/save', saveMessage);
 app.post('/chats/edit', editMessage);
 
 // correct message
-app.post('/chats/correct', correctMessage);
+// app.post('/chats/correct', correctMessage);
 
 // translate message
-app.post('/chats/trans', transMessage);
+// app.post('/chats/trans', transMessage);
 
 
 function getAllUsers(req, res, next) {
@@ -587,6 +587,7 @@ function sendMessage(val) {
 }
 
 function sendCorrection(val) {
+	console.log("sending correction");
 	var query = 'SELECT chat_id FROM chats WHERE (user1=$1 AND user2=$2) OR (user1=$2 AND user2=$1)';
 	conn.query(query, [val.sender, val.receiver], function(err, data) {
 		if (err) {
@@ -606,35 +607,35 @@ function sendCorrection(val) {
 	});
 }
 
-function correctMessage(req, res, next) {
-	console.log("correct saving");
-	var message_body = req.body.message;
-	var id = req.body.id;
-	var sender = req.body.sender;
-	var receiver = req.body.receiver;
+// function correctMessage(req, res, next) {
+// 	console.log("correct saving");
+// 	var message_body = req.body.message;
+// 	var id = req.body.id;
+// 	var sender = req.body.sender;
+// 	var receiver = req.body.receiver;
 
-	conn.query('UPDATE messages SET correction=$1 WHERE message_id=$2', [message_body, id], function(error, data) {
-		if (error) {
-			console.error('ERROR: could not add corrected message to table');
-		}
+// 	conn.query('UPDATE messages SET correction=$1 WHERE message_id=$2', [message_body, id], function(error, data) {
+// 		if (error) {
+// 			console.error('ERROR: could not add corrected message to table');
+// 		}
 
-	});
-}
+// 	});
+// }
 
-function transMessage(req, res, next) {
-	console.log("trans saving");
-	var message_body = req.body.message;
-	var id = req.body.id;
-	var sender = req.body.sender;
-	var receiver = req.body.receiver;
+// function transMessage(req, res, next) {
+// 	console.log("trans saving");
+// 	var message_body = req.body.message;
+// 	var id = req.body.id;
+// 	var sender = req.body.sender;
+// 	var receiver = req.body.receiver;
 
-	conn.query('UPDATE messages SET translation=$1 WHERE message_id=$2', [message_body, id], function(error, data) {
-		if (error) {
-			console.error('ERROR: could not add translated message to table');
-		}
+// 	conn.query('UPDATE messages SET translation=$1 WHERE message_id=$2', [message_body, id], function(error, data) {
+// 		if (error) {
+// 			console.error('ERROR: could not add translated message to table');
+// 		}
 
-	});
-}
+// 	});
+// }
 
 console.log(100);
 io.sockets.on('connection', function(socket) {
@@ -660,9 +661,8 @@ io.sockets.on('connection', function(socket) {
 		console.log("sending message");
 		sendMessage(val);
 	});
-	socket.on('correction', function(val) {
+	socket.on('correction', function(val, callback) {
 		editMessage(val); 	// takes care of sending it too
-		console.log("sending message");
 	});
 	// error
 	socket.on('error', function() {

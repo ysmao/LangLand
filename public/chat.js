@@ -47,13 +47,12 @@ $(document).ready(function() {
 		$('#edit_modal').show();
 
 		$('#new_message').submit(function(event) {
-			var pathname = window.location.pathname.split( '/' );
+			event.preventDefault();
 
 			var message = $('#message_box').val();
 			var time = new Date().getTime();
 			var sender = $('#message_sender').val();
-			var receiver = pathname[2];
-			console.log(666);
+			var receiver = otherPerson;
 
 			$('#new_message')[0].reset();
     		// $.post('/chats/edit', {message:message, time:time, sender:sender, receiver:receiver, m_id:m_id}, function(res){
@@ -94,21 +93,21 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.correct').click(function(event){
-		var message = $('#message_box').val();
-    	$.post('/chats/correct', {message:message}, function(res){
-        	//you might want to add callback function that is executed post request success
-        	console.log('msg sent');
-    	});
-	});
+	// $('.correct').click(function(event){
+	// 	var message = $('#message_box').val();
+ //    	$.post('/chats/correct', {message:message}, function(res){
+ //        	//you might want to add callback function that is executed post request success
+ //        	console.log('msg sent');
+ //    	});
+	// });
 
-	$('.trans').click(function(event){
-		var message = $('#message_box').val();
-    	$.post('/chats/trans', {message:message}, function(res){
-        	//you might want to add callback function that is executed post request success
-        	console.log('msg sent');
-    	});
-	});
+	// $('.trans').click(function(event){
+	// 	var message = $('#message_box').val();
+ //    	$.post('/chats/trans', {message:message}, function(res){
+ //        	//you might want to add callback function that is executed post request success
+ //        	console.log('msg sent');
+ //    	});
+	// });
 
 
 	window.onclick = function(event) {
