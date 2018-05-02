@@ -21,12 +21,12 @@
 			<div class="chats_friends">
 				<div class="tabs">
 					<a href="/chats">
-						<div class="tab" id="chats_tab">
+						<div class="tab selected" id="chats_tab">
 							<img src="/chats_icon.png" alt="Chats" width=55 height=55>
 						</div>
 					</a>
 					<a href="/friends/{{myUsername}}">
-						<div class="tab selected" id="friends_tab">
+						<div class="tab" id="friends_tab">
 							<img src="/friends_icon.png" alt="Friends" width=50 height=50>
 						</div>
 					</a>
@@ -43,7 +43,7 @@
 			<div class="leftover_space">
 				<div id="chat_content">
 					{{#if chat_id}}
-						{{> chat_room messages=messages me=myUsername}}
+						{{> chat_room messages=messages me=myUsername them=theirUsername}}
 					{{/if}}
 				</div>
 			</div>

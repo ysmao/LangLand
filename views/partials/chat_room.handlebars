@@ -2,6 +2,10 @@
 	<ul id="messages_list">
 		{{#each messages as |message|}}
 			{{chat_message message ../me}}
+		{{else}}
+			<li id="empty_chat_content">
+				<h1>This is the beginning of your message history with <a href="/friends/{{them}}">{{them}}</a></h1>
+			</li>
 		{{/each}}
 	</ul>
 </div>

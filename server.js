@@ -276,6 +276,7 @@ app.get('/chats/:user', function(req, res, next) {
 		} else {
 			var render_data = {
 				"myUsername": me,
+				"theirUsername": them,
 				"chats": getChats(me, data.rows)
 			};
 			getChat(req, res, next, me, them, data.rows, render_data);
