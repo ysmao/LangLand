@@ -118,6 +118,10 @@ a {
 	margin: 5px 0;
 }
 
+.lang {
+	padding-top: 10px;
+}
+
 .error_container {
 	display: flex;
 	flex-direction: column;
@@ -555,7 +559,7 @@ a {
 
 #message_box {
 	width: 70%;
-	height: 120px;
+	height: 70%;
 	resize: none;
 
 	margin: 10px 0;
