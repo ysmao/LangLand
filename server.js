@@ -96,6 +96,8 @@ var hbs = exphbs.create({
     }
 });
 
+handlebars.registerHelper("equal", require("handlebars-helper-equal"));
+
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
