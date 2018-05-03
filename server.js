@@ -67,19 +67,30 @@ var hbs = exphbs.create({
 				c += 'your_message"';
 			}
 			var first_li = '<li ' + c + '>'
-			var first_msg_content = '<div class="message_content" id="message_' + message.message_id + '">'
-			var message_content = first_msg_content + message.body + '</div>';
+
+			var msg_txt = ""
 			if (message.correction != "") {
-				message_content = first_msg_content + message.body + '<br>' + message.correction + '</div>';
+				var original_msg = '<span class="original_msg">' + message.body + '</span>';
+				var corrected_msg = '<span class="corrected_msg">' + message.correction + '</span>';
+				msg_txt = original_msg + corrected_msg;
+			} else {
+				msg_txt = message.body;
 			}
+
+			var msg_content = '<div class="message_content" id="' + message.message_id + '">' + msg_txt + '</div>';
+
 			if (message.sender == me) {
-				return new handlebars.SafeString(first_li + message_content + '</li>');
+				return new handlebars.SafeString(first_li + msg_content + '</li>');
 			} else {
 				var img = '<img src="/placeholder.png" alt="' + message.sender + '" class="avatar">';
-				var edit_button = '<button class="edit_button" id="' + message.message_id + '"> \
-				<img src="/edit_icon.png" width="17" height="17" alt="edit message"> \
-				</button>';
-				return new handlebars.SafeString(first_li + img + message_content + edit_button + '</li>');
+			 	var edit_button = '<button class="edit_button" id="' + message.message_id + '"> \
+			 	<img src="/edit_icon.png" width="17" height="17" alt="edit message"> \
+			 	</button>';
+			 	if (message.correction != "") {
+			 		return new handlebars.SafeString(first_li + img + msg_content + '</li>');
+			 	} else {
+			 		return new handlebars.SafeString(first_li + img + msg_content + edit_button + '</li>');
+			 	}
 			}
 		}
     }

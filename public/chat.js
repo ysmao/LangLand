@@ -30,7 +30,11 @@ $(document).ready(function() {
 	});
 
 	socket.on("correction", function(val) {
-
+		if (val.sender == me) {
+			addMyCorrectedMessage(val);
+		} else if (val.receiver == otherPerson) {
+			addYourCorrectedMessage(val);
+		}
 	});
 
 	$('.edit_button').click(function(event) {
@@ -168,9 +172,49 @@ function addYourMessage(val) {
 	}
 }
 
+function addMyCorrectedMessage(val) {
+	var chat = document.getElementById("chat_display");
+	var isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1;
+	console.log(val);
+	var first_li = '<li class="message my_message">';
+
+	var first_msg_content = '<div class="message_content" id="' + val.m_id + '">'
+	var original_msg = '<span class="original_msg">' + val.orig_msg + '</span>';
+	var corrected_msg = '<span class="corrected_msg">' + val.correction + '</span>';
+	var msg_content = first_msg_content + original_msg + corrected_msg + '</div>';
+
+	var rendered_message = first_li + msg_content + '</li>';
+
+	$('#messages_list').append(rendered_message);
+
+	if(isScrolledToBottom) {
+	    chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+	}
+}
+
+function addYourCorrectedMessage(val) {
+	var chat = document.getElementById("chat_display");
+	var isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1;
+
+	var first_li = '<li class="message your_message">';
+	var img = '<img src="/placeholder.png" alt="' + val.sender + '" class="avatar">';
+	var original_msg = '<span class="original_msg">' + val.orig_msg + '</span>';
+	var corrected_msg = '<span class="corrected_msg">' + val.correction + '</span>';
+	var msg_content = first_msg_content + original_msg + corrected_msg + '</div>';
+
+	var rendered_message = first_li + img + msg_content + '</li>';
+
+	$('#messages_list').append(rendered_message);
+
+	if(isScrolledToBottom) {
+	    chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+	}
+}
+
 function correctMessage() {
 	console.log("correcting");
 	correct = true;
+	translate = false;
 
 	msg_content_id = '#message_' + edit_id;
 	$('#message_box').val( $(msg_content_id).html());
@@ -181,6 +225,7 @@ function correctMessage() {
 function translateMessage() {
 	console.log("translating");
 	translate = true;
+	correct = false;
 
 	$('#edit_modal').hide();
 }

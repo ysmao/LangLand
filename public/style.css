@@ -406,7 +406,6 @@ a {
 	color: #E1E8EC;
 }
 
-
 /*
 ============================================ 
 		    	USER PROFILE
@@ -547,7 +546,8 @@ a {
 	max-width: 660px;
 
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	justify-content: center;
 
 	padding: 10px;
 
@@ -564,6 +564,19 @@ a {
 	margin: 0 5px 0 20px;
 	
 	background-color: #F3BA00;
+}
+
+.original_msg, .corrected_msg {
+	display: block;
+}
+
+.original_msg {
+	border-bottom: 1px solid black;
+	padding-bottom: 10px;
+}
+
+.corrected_msg {
+	padding-top: 10px;
 }
 
 #new_message {
