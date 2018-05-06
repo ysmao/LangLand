@@ -60,11 +60,7 @@ $(document).ready(function() {
 	    	}
 		});
 		if (form.valid()) {
-			$('#signup_pt_two').css('display', 'inline-flex');
-			$('#signup_pt_one').hide();
-
-			$('#step_two').addClass("current_step");
-			$('#step_one').removeClass("current_step");
+			displaySignupTwo();
 		}
 	});
 
@@ -111,6 +107,8 @@ $(document).ready(function() {
 function displayLogin() {
 	$('#login_container').css('display', 'inline-flex');
 	$('#landing_buttons').hide();
+
+	$('#login_username').focus();
 }
 
 function displaySignupOne() {
@@ -121,6 +119,8 @@ function displaySignupOne() {
 	$('#steps').show();
 	$('#step_one').addClass("current_step");
 	$('#step_two').removeClass("current_step");
+
+	$('#signup_username').focus();
 }
 
 function displaySignupTwo() {
@@ -129,4 +129,6 @@ function displaySignupTwo() {
 
 	$('#step_two').addClass("current_step");
 	$('#step_one').removeClass("current_step");
+
+	$('#signup_birthdate').focus();
 }
