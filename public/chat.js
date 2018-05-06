@@ -97,6 +97,14 @@ $(document).ready(function() {
 		}
 	});
 
+	$("#message_box").keypress(function (event) {
+	    if(event.which == 13 && !event.shiftKey) {        
+	        $('#new_message').submit();
+	        event.preventDefault();
+	        return false;
+	    }
+	});
+
 	// $('.correct').click(function(event){
 	// 	var message = $('#message_box').val();
  //    	$.post('/chats/correct', {message:message}, function(res){
