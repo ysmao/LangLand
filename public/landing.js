@@ -107,6 +107,12 @@ $(document).ready(function() {
 function displayLogin() {
 	$('#login_container').css('display', 'inline-flex');
 	$('#landing_buttons').hide();
+	$('#signup_pt_one').hide();
+	$('#signup_pt_two').hide();
+	$('#steps').hide();
+
+	$('#signup_redirect').show();
+	$('#login_redirect').hide();
 
 	$('#login_username').focus();
 }
@@ -115,6 +121,10 @@ function displaySignupOne() {
 	$('#signup_pt_one').css('display', 'inline-flex');
 	$('#landing_buttons').hide();
 	$('#signup_pt_two').hide();
+	$('#login_container').hide();
+
+	$('#signup_redirect').hide();
+	$('#login_redirect').show();
 
 	$('#steps').show();
 	$('#step_one').addClass("current_step");
@@ -126,6 +136,9 @@ function displaySignupOne() {
 function displaySignupTwo() {
 	$('#signup_pt_two').css('display', 'inline-flex');
 	$('#signup_pt_one').hide();
+	$('#login_container').hide();
+
+	$('#signup_redirect').hide();
 
 	$('#step_two').addClass("current_step");
 	$('#step_one').removeClass("current_step");

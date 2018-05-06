@@ -221,6 +221,16 @@ a {
 	background-color: #01587A;
 }
 
+#signup_redirect, #login_redirect {
+	margin: 5px 0;
+	display: none;
+}
+
+.pseudolink {
+	color: #095e7e;
+	text-decoration: underline;
+}
+
 /*
 ============================================ 
 				  NAV BAR
