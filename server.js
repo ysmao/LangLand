@@ -77,7 +77,7 @@ var hbs = exphbs.create({
 				msg_txt = message.body;
 			}
 
-			var msg_content = '<div class="message_content" id="' + message.message_id + '">' + msg_txt + '</div>';
+			var msg_content = '<div class="message_content" id="message_' + message.message_id + '">' + msg_txt + '</div>';
 
 			if (message.sender == me) {
 				return new handlebars.SafeString(first_li + msg_content + '</li>');

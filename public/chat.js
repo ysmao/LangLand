@@ -43,7 +43,7 @@ $(document).ready(function() {
 		edit_id = ($(this).attr('id'));
 
 		msg_content_id = '#message_' + edit_id;
-
+		console.log(msg_content_id);
 		console.log($(msg_content_id).html());
 
 		$("#edit_modal_content").css({top: event.pageY, left: event.pageX});
@@ -147,7 +147,7 @@ function addMyMessage(val) {
 	var isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1;
 
 	var first_li = '<li class="message my_message">';
-	var first_msg_content = '<div class="message_content" id="' + val.m_id + '">'
+	var first_msg_content = '<div class="message_content" id="message_' + val.m_id + '">'
 	var msg_content = first_msg_content + val.message + '</div>';
 
 	var rendered_message = first_li + msg_content + '</li>';
@@ -165,7 +165,7 @@ function addYourMessage(val) {
 
 	var first_li = '<li class="message your_message">';
 	var img = '<img src="/placeholder.png" alt="' + val.sender + '" class="avatar">';
-	var first_msg_content = '<div class="message_content" id="' + val.m_id + '">'
+	var first_msg_content = '<div class="message_content" id="message_' + val.m_id + '">'
 	var msg_content = first_msg_content + val.message + '</div>';
 
 	var edit_button = '<button class="edit_button" id="' + val.m_id + '"> \
@@ -186,7 +186,7 @@ function addMyCorrectedMessage(val) {
 	console.log(val);
 	var first_li = '<li class="message my_message">';
 
-	var first_msg_content = '<div class="message_content" id="' + val.m_id + '">'
+	var first_msg_content = '<div class="message_content" id="message_' + val.m_id + '">';
 	var original_msg = '<span class="original_msg">' + val.orig_msg + '</span>';
 	var corrected_msg = '<span class="corrected_msg">' + val.correction + '</span>';
 	var msg_content = first_msg_content + original_msg + corrected_msg + '</div>';
@@ -206,6 +206,7 @@ function addYourCorrectedMessage(val) {
 
 	var first_li = '<li class="message your_message">';
 	var img = '<img src="/placeholder.png" alt="' + val.sender + '" class="avatar">';
+	var first_msg_content = '<div class="message_content" id="message_' + val.m_id + '">';
 	var original_msg = '<span class="original_msg">' + val.orig_msg + '</span>';
 	var corrected_msg = '<span class="corrected_msg">' + val.correction + '</span>';
 	var msg_content = first_msg_content + original_msg + corrected_msg + '</div>';
