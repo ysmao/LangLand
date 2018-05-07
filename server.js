@@ -83,7 +83,7 @@ var hbs = exphbs.create({
 				return new handlebars.SafeString(first_li + msg_content + '</li>');
 			} else {
 				var img = '<img src="/placeholder.png" alt="' + message.sender + '" class="avatar">';
-			 	var edit_button = '<button class="edit_button" id="' + message.message_id + '" onclick="editClick(event)"> \
+			 	var edit_button = '<button class="edit_button" id="' + message.message_id + '"> \
 			 	<img src="/edit_icon.png" width="17" height="17" alt="edit message"> \
 			 	</button>';
 			 	if (message.correction != "") {
