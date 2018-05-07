@@ -4,15 +4,17 @@ var editing = false;
 var edit_id = 0;
 var translate = false;
 var correct = false;
+var me;
+var otherPerson;
 // var anyDB = require('./server.js');
 // var conn = anyDB.createConnection('sqlite3://langland.db');
 
 
 $(document).ready(function() {
 	editing = false;
-	var me = $('#message_sender').val();
+	me = $('#message_sender').val();
 	var pathname = window.location.pathname.split( '/' );
-	var otherPerson = pathname[2];
+	otherPerson = pathname[2];
 
     $('#message_box').focus();
 
@@ -37,7 +39,7 @@ $(document).ready(function() {
 	});
 
 	$('.edit_button').click(function(event) {
-		editing =true;
+		editing = true;
 
 		edit_id = ($(this).attr('id'));
 
@@ -49,44 +51,9 @@ $(document).ready(function() {
 
 		$('#edit_modal').show();
 
-		$('#new_message').submit(function(event) {
-			event.preventDefault();
-
-			var message = $('#message_box').val();
-			var time = new Date().getTime();
-			var sender = $('#message_sender').val();
-			var receiver = otherPerson;
-
-			$('#new_message')[0].reset();
-    		
-    		socket.emit('correction', {message:message, time:time, sender:sender, receiver:receiver, m_id:edit_id}, function(val) {
-    			console.log(val);
-    		});
-
-    		$('#message_box').focus();
-    	});
 	});
 
-	$('#new_message').submit(function(event) {
-		if(editing===false){
-			event.preventDefault();
-
-			var pathname = window.location.pathname.split( '/' );
-
-			var message = $('#message_box').val();
-			var time = new Date().getTime();
-			var sender = $('#message_sender').val();
-			var receiver = pathname[2];
-			
-			$('#new_message')[0].reset(); //go back to default
-
-			socket.emit('message', {message:message, time:time, sender:sender, receiver:receiver}, function(val) {
-				console.log(val);
-			});
-
-    		$('#message_box').focus();
-		}
-	});
+	setSubmit();
 
 	$("#message_box").keypress(function (event) {
 	    if(event.which == 13 && !event.shiftKey) {        
@@ -132,6 +99,48 @@ $(document).ready(function() {
 	var chat = document.getElementById("chat_display");
 	chat.scrollTop = chat.scrollHeight - chat.clientHeight;
 });
+
+function setSubmit() {
+	$('#new_message').submit(function(event) {
+		if (!editing) {
+			event.preventDefault();
+
+			var pathname = window.location.pathname.split( '/' );
+
+			var message = $('#message_box').val();
+			var time = new Date().getTime();
+			var sender = $('#message_sender').val();
+			var receiver = pathname[2];
+			
+			$('#new_message')[0].reset(); //go back to default
+
+			socket.emit('message', {message:message, time:time, sender:sender, receiver:receiver}, function(val) {
+				console.log(val);
+			});
+
+    		$('#message_box').focus();
+		} else {
+			event.preventDefault();
+
+			var message = $('#message_box').val();
+			var time = new Date().getTime();
+			var sender = $('#message_sender').val();
+			var receiver = otherPerson;
+
+			$('#new_message')[0].reset();
+			
+			socket.emit('correction', {message:message, time:time, sender:sender, receiver:receiver, m_id:edit_id}, function(val) {
+				console.log(val);
+			});
+
+			console.log("submitted edit");
+			$('#message_box').focus();
+			editing = false;
+			translate = false;
+			correct = false;
+		}
+	});
+}
 
 function addMyMessage(val) {
 	var chat = document.getElementById("chat_display");
@@ -212,7 +221,6 @@ function addYourCorrectedMessage(val) {
 }
 
 function correctMessage() {
-	console.log("correcting");
 	correct = true;
 	translate = false;
 
@@ -223,7 +231,6 @@ function correctMessage() {
 }
 
 function translateMessage() {
-	console.log("translating");
 	translate = true;
 	correct = false;
 
