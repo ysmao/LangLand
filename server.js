@@ -372,6 +372,11 @@ app.post('/signup', saveUser);
 // login
 app.post('/login', loginUser);
 
+
+app.post('/search/result', getSelectedUsers);
+
+
+
 // save message
 app.post('/chats/save', saveMessage);
 
@@ -392,6 +397,42 @@ function getAllUsers(req, res, next) {
 			res.send("error");
 			console.error(err);
 		} else if (data.rows) {
+			getUserLangInfo(req, res, next, getUserAges(data.rows));
+		} else {
+			console.log("uhh");
+			res.send("failure");
+		}
+	});
+}
+
+
+function getSelectedUsers(req, res, next) {
+	console.log("guess where i am")
+	var query = 'SELECT username, birthdate, gender FROM users WHERE username LIKE $1';
+	var username = req.body.username+'%';
+	console.log(username);
+	var min_age = req.body.min_age;
+	var max_age = req.body.max_age;
+	var native_lang = req.body.native_lang;
+
+
+	var list = [username];
+
+	if (native_lang==="Chinese"||native_lang==="English"){
+		console.log("native not null");
+		query = 'SELECT users.username, birthdate, gender FROM users INNER JOIN languages ON users.username=languages.username WHERE users.username LIKE $1 AND languages.native=1 AND languages.language=$2';
+		list=[username, native_lang];
+	}
+
+	conn.query(query, list, function(err, data) {
+		if (err) {
+			res.send("error");
+			console.error(err);
+		} else if (data.rows) {
+			// var req=this.req;
+			// var res=this.res;
+			// var next=this.next;
+			console.log(data.rows);
 			getUserLangInfo(req, res, next, getUserAges(data.rows));
 		} else {
 			console.log("uhh");
@@ -678,6 +719,11 @@ io.sockets.on('connection', function(socket) {
 	socket.on('correction', function(val, callback) {
 		editMessage(val); 	// takes care of sending it too
 	});
+	// socket.on('search_users', function(val) {
+	// 	console.log("searching user");
+	// 	getSelectedUsers(val);
+	// });
+
 	// error
 	socket.on('error', function() {
 		console.log('ERROR: socket error');
