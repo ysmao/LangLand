@@ -23,16 +23,15 @@ $(document).ready(function() {
 	socket.on("message", function(val) {
 		if (val.sender == me) {
 			addMyMessage(val);
-		} else if (val.receiver == otherPerson) {
+		} else if (val.receiver == me) {
 			addYourMessage(val);
 		}
-		console.log(val.message);
 	});
 
 	socket.on("correction", function(val) {
 		if (val.sender == me) {
 			addMyCorrectedMessage(val);
-		} else if (val.receiver == otherPerson) {
+		} else if (val.receiver == me) {
 			addYourCorrectedMessage(val);
 		}
 	});
@@ -59,10 +58,6 @@ $(document).ready(function() {
 			var receiver = otherPerson;
 
 			$('#new_message')[0].reset();
-    		// $.post('/chats/edit', {message:message, time:time, sender:sender, receiver:receiver, m_id:m_id}, function(res){
-      //   	//you might want to add callback function that is executed post request success
-      //   		console.log('edited msg sent');
-    		// });
     		
     		socket.emit('correction', {message:message, time:time, sender:sender, receiver:receiver, m_id:edit_id}, function(val) {
     			console.log(val);
@@ -84,10 +79,6 @@ $(document).ready(function() {
 			var receiver = pathname[2];
 			
 			$('#new_message')[0].reset(); //go back to default
-	    	// $.post('/chats/save', {message:message, time:time, sender:sender, receiver:receiver}, function(res){
-	     //    	//you might want to add callback function that is executed post request success
-	     //    	console.log('msg sent');
-	    	// });
 
 			socket.emit('message', {message:message, time:time, sender:sender, receiver:receiver}, function(val) {
 				console.log(val);

@@ -634,7 +634,7 @@ function sendMessage(val) {
 					console.error(err);
 				} else {
 					val.m_id = data.rows[0].message_id;
-					io.sockets.in(chat_id).emit('message', val);
+					io.sockets.in("room" + chat_id).emit('message', val);
 				}
 			});
 		}
@@ -655,7 +655,7 @@ function sendCorrection(val) {
 					console.error(err);
 				} else {
 					val.m_id = data.rows[0].message_id;
-					io.sockets.in(chat_id).emit('correction', val);
+					io.sockets.in("room" + chat_id).emit('correction', val);
 				}
 			});
 		}
@@ -704,9 +704,9 @@ io.sockets.on('connection', function(socket) {
 				var rooms = data.rows;
 				for(var i = 0; i < rooms.length; i++) {
     				var room = rooms[i];
-    				socket.join(room.chat_id);
+    				socket.join("room" + room.chat_id);
 				}
-				callback("hi");
+				callback("joined " + rooms.length + " rooms");
 			}
 		});
 	});
