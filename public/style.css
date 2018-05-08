@@ -512,10 +512,6 @@ a {
 	justify-content: flex-end;
 }
 
-.profile_container a {
-	display: inline-block;
-}
-
 .edit_link {
 	font-size: 30px;
 	color: #F3BA00;
