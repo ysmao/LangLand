@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	console.log("here");
 	var pathname = window.location.pathname.split( '/' );
 
 	if (pathname.length == 3) {
@@ -10,9 +9,9 @@ $(document).ready(function() {
 });
 
 function logOut(event) {
-	event.preventDefault();
-
-	console.log("yo");
-
-	// the rest of logging out goes here
+	$.post('/logout', function(res){
+        if (res == "success") {
+        	window.location.href = '/';
+        }
+    });
 }

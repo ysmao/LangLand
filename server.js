@@ -372,15 +372,6 @@ function getMessages(req, res, next, user1, user2, render_data) {
 
 app.get('/search', getAllUsers);
 
-app.get('/', function(req, res, next) {
-	var username = req.session.username;
-	if (username) {
-		res.redirect('/chats');
-	} else {
-		res.render('landing');
-	}
-});
-
 app.get('/s/', async function(req, res, next) {
 	console.log("seaaaaaaaaaaaaaaaaaarch");
 
@@ -412,6 +403,15 @@ app.get('/s/', async function(req, res, next) {
 	});
 });
 
+app.get('/', function(req, res, next) {
+	var username = req.session.username;
+	if (username) {
+		res.redirect('/chats');
+	} else {
+		res.render('landing');
+	}
+});
+
 app.get('*', function(req, res, next) {
 	res.redirect('/');
 });
@@ -422,6 +422,7 @@ app.post('/signup', saveUser);
 // login
 app.post('/login', loginUser);
 
+app.post('/logout', logoutUser);
 
 app.post('/search/result', getSelectedUsers);
 
@@ -590,6 +591,17 @@ function loginUser(req, res, next) {
 		} else {
 			var sessData = req.session;
 			sessData.username = username;
+			res.send("success");
+		}
+	});
+}
+
+function logoutUser(req, res, next) {
+	req.session.destroy(function(err) {
+		if (err) {
+			res.send("error");
+			console.error(err);
+		} else {
 			res.send("success");
 		}
 	});
