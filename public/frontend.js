@@ -8,3 +8,11 @@ $(document).ready(function() {
 		$(current_name).addClass("current");
 	}
 });
+
+function logOut(event) {
+	event.preventDefault();
+
+	console.log("yo");
+
+	// the rest of logging out goes here
+}
