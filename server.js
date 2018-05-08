@@ -174,35 +174,43 @@ conn.query('CREATE TABLE IF NOT EXISTS chats ( \
 
 app.get('/friends', function(req, res) {
 	var me = req.session.username;
-	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
-	conn.query(query, [me], function(err, data) {
-		if (err) {
-			console.error(err);
-		} else {
-			var data = {
-				"myUsername": me,
-				"friends": getChats(me, data.rows)
-			};
-			res.render('friends', data);
-		}
-	});
+	if (me) {
+		var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
+		conn.query(query, [me], function(err, data) {
+			if (err) {
+				console.error(err);
+			} else {
+				var data = {
+					"myUsername": me,
+					"friends": getChats(me, data.rows)
+				};
+				res.render('friends', data);
+			}
+		});
+	} else {
+		res.redirect('/');
+	}
 });
 
 app.get('/friends/:user', function(req, res, next) {
-	var friend = req.params.user;
 	var me = req.session.username;
-	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
-	conn.query(query, [me], function(err, data) {
-		if (err) {
-			console.error(err);
-		} else {
-			var render_data = {
-				"myUsername": me,
-				"friends": getChats(me, data.rows)
-			};
-			getUserInfo(req, res, next, friend, render_data);
-		}
-	});
+	if (me) {
+		var friend = req.params.user;
+		var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
+		conn.query(query, [me], function(err, data) {
+			if (err) {
+				console.error(err);
+			} else {
+				var render_data = {
+					"myUsername": me,
+					"friends": getChats(me, data.rows)
+				};
+				getUserInfo(req, res, next, friend, render_data);
+			}
+		});
+	} else {
+		res.redirect('/');
+	}
 });
 
 function getUserInfo(req, res, next, user, render_data) {
@@ -251,18 +259,22 @@ function getUserInfo(req, res, next, user, render_data) {
 
 app.get('/chats', function(req, res, next) {
 	var me = req.session.username;
-	var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
-	conn.query(query, [me], function(err, data) {
-		if (err) {
-			console.error(err);
-		} else {
-			var data = {
-				"myUsername": me,
-				"chats": getChats(me, data.rows)
-			};
-			res.render('chats', data);
-		}
-	});
+	if (me) {
+		var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
+		conn.query(query, [me], function(err, data) {
+			if (err) {
+				console.error(err);
+			} else {
+				var data = {
+					"myUsername": me,
+					"chats": getChats(me, data.rows)
+				};
+				res.render('chats', data);
+			}
+		});
+	} else {
+		res.redirect('/');
+	}
 });
 
 function getChats(me, chats) {
@@ -281,20 +293,24 @@ function getChats(me, chats) {
 
 app.get('/chats/:user', function(req, res, next) {
 	var me = req.session.username;
-	var them = req.params.user;
-	var query = 'SELECT chat_id,user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
-	conn.query(query, [me], function(err, data) {
-		if (err) {
-			console.error(err);
-		} else {
-			var render_data = {
-				"myUsername": me,
-				"theirUsername": them,
-				"chats": getChats(me, data.rows)
-			};
-			getChat(req, res, next, me, them, data.rows, render_data);
-		}
-	});
+	if (me) {
+		var them = req.params.user;
+		var query = 'SELECT chat_id,user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
+		conn.query(query, [me], function(err, data) {
+			if (err) {
+				console.error(err);
+			} else {
+				var render_data = {
+					"myUsername": me,
+					"theirUsername": them,
+					"chats": getChats(me, data.rows)
+				};
+				getChat(req, res, next, me, them, data.rows, render_data);
+			}
+		});
+	} else {
+		res.redirect('/');
+	}
 });
 
 function getChat(req, res, next, user1, user2, data, render_data) {
@@ -353,10 +369,6 @@ function getMessages(req, res, next, user1, user2, render_data) {
 
 app.get('/search', getAllUsers);
 
-app.get('/landing', function(request, response) {
-	response.render('landing');
-});
-
 app.get('/', function(req, res, next) {
 	var username = req.session.username;
 	if (username) {
@@ -364,6 +376,10 @@ app.get('/', function(req, res, next) {
 	} else {
 		res.render('landing');
 	}
+});
+
+app.get('*', function(req, res, next) {
+	res.redirect('/');
 });
 
 // signup
@@ -391,18 +407,22 @@ app.post('/chats/edit', editMessage);
 
 
 function getAllUsers(req, res, next) {
-	var query = 'SELECT username, birthdate, gender FROM users';
-	conn.query(query, function(err, data) {
-		if (err) {
-			res.send("error");
-			console.error(err);
-		} else if (data.rows) {
-			getUserLangInfo(req, res, next, getUserAges(data.rows));
-		} else {
-			console.log("uhh");
-			res.send("failure");
-		}
-	});
+	if (req.session.username) {
+		var query = 'SELECT username, birthdate, gender FROM users';
+		conn.query(query, function(err, data) {
+			if (err) {
+				res.send("error");
+				console.error(err);
+			} else if (data.rows) {
+				getUserLangInfo(req, res, next, getUserAges(data.rows));
+			} else {
+				console.log("uhh");
+				res.send("failure");
+			}
+		});
+	} else {
+		res.redirect('/');
+	}
 }
 
 
