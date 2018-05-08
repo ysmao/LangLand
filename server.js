@@ -11,6 +11,9 @@ var bodyParser = require('body-parser');
 var anyDB = require('any-db');
 var engines = require('consolidate');
 
+// const url = require('url');  
+// const querystring = require('querystring');
+
 var conn = anyDB.createConnection('sqlite3://langland.db');
 
 var app = express();
@@ -378,6 +381,37 @@ app.get('/', function(req, res, next) {
 	}
 });
 
+app.get('/s/', async function(req, res, next) {
+	console.log("seaaaaaaaaaaaaaaaaaarch");
+
+    let username = req.query.prefix + '%';
+    let min_age = req.query.min_age;
+    var max_age = req.query.max_age;
+    var native_lang = req.query.native_lang;
+	var query = 'SELECT username, birthdate, gender FROM users WHERE username LIKE $1';
+
+	var list = [username];
+
+	if (native_lang==="Chinese"||native_lang==="English"){
+		console.log("native not null");
+		query = 'SELECT users.username, birthdate, gender FROM users INNER JOIN languages ON users.username=languages.username WHERE users.username LIKE $1 AND languages.native=1 AND languages.language=$2';
+		list=[username, native_lang];
+	}
+
+	conn.query(query, list, function(err, data) {
+		if (err) {
+			res.send("error");
+			console.error(err);
+		} else if (data.rows) {
+			console.log(data.rows);
+			getUserLangInfo(req, res, next, getUserAges(data.rows));
+		} else {
+			console.log("uhh");
+			res.send("failure");
+		}
+	});
+});
+
 app.get('*', function(req, res, next) {
 	res.redirect('/');
 });
@@ -479,22 +513,27 @@ function getAge(bday) {
 }
 
 function getUserLangInfo(req, res, next, userData) {
-	var query = 'SELECT * FROM languages WHERE username=$1';
-	var usersFinished = 0;
-	userData.forEach(function(user, index, array) {
-		conn.query(query, [user.username], function(err, data) {
-			usersFinished++;
-			if (err) {
-				console.error(err);
-			} else {
-				user.languages = data.rows;
-				if (usersFinished === array.length) {
-					var data = { "results" : array };
-					res.render('search', data);
+	if (userData.length == 0){
+		var render_data = { 'results' : userData };
+		res.render('search', render_data);
+	} else {
+		var query = 'SELECT * FROM languages WHERE username=$1';
+		var usersFinished = 0;
+		userData.forEach(function(user, index, array) {
+			conn.query(query, [user.username], function(err, data) {
+				usersFinished++;
+				if (err) {
+					console.error(err);
+				} else {
+					user.languages = data.rows;
+					if (usersFinished === array.length) {
+						var data = { "results" : array };
+						res.render('search', data);
+					}
 				}
-			}
+			});
 		});
-	});
+	}
 }
 
 function saveUser(req, res, next) {

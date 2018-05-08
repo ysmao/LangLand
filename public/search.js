@@ -34,22 +34,23 @@ $(document).ready(function() {
 				console.log(3444);
 				max_age=-1;
 			}
+			window.location.href='http://localhost:8080/s/?prefix='+username+'&min_age='+min_age+'&max_age='+max_age+'&native_lang='+native_lang;
 			console.log(min_age);
 			console.log(max_age);
 			console.log(native_lang);
 			
 			
 			//$('#users_search').reset(); //go back to default
-	    	$.post('/search/result', {username:username,min_age:min_age,max_age:max_age,native_lang:native_lang}, function(res){
-	        	//you might want to add callback function that is executed post request success
-	        	console.log('search request sent');
-	    	});
+	    	// $.post('/search/result', {username:username,min_age:min_age,max_age:max_age,native_lang:native_lang}, function(res){
+	     //    	//you might want to add callback function that is executed post request success
+	     //    	console.log('search request sent');
+	    	// });
 			// socket.emit('search_users', {username:username}, function(val) {
 			// 	console.log(val);
 			// });
 
     		$('#users_search').focus();
-	        event.preventDefault();
+	        // event.preventDefault();
 	        return false;
 	    }
 	});});
