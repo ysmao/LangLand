@@ -263,16 +263,23 @@ function getUserInfo(req, res, next, user, render_data) {
 app.get('/chats', function(req, res, next) {
 	var me = req.session.username;
 	if (me) {
-		var query = 'SELECT user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
-		conn.query(query, [me], function(err, data) {
+		var query = 'SELECT chats.user1, chats.user2, messages.body, messages.time \
+					 FROM chats \
+					 LEFT JOIN messages \
+					 ON chats.newest_msg = messages.message_id \
+					 WHERE (chats.newest_msg<>$1) \
+					 AND (chats.user1=$2 OR chats.user2=$2) \
+					 ORDER BY messages.time DESC';
+		conn.query(query, [-1, me], function(err, data) {
 			if (err) {
 				console.error(err);
 			} else {
-				var data = {
+				var render_data = {
 					"myUsername": me,
-					"chats": getChats(me, data.rows)
+					"chats": getChatTimes(getChats(me, data.rows))
 				};
-				res.render('chats', data);
+				// console.log(data.rows);
+				res.render('chats', render_data);
 			}
 		});
 	} else {
@@ -298,16 +305,23 @@ app.get('/chats/:user', function(req, res, next) {
 	var me = req.session.username;
 	if (me) {
 		var them = req.params.user;
-		var query = 'SELECT chat_id,user1,user2 FROM chats WHERE user1=$1 OR user2=$1';
-		conn.query(query, [me], function(err, data) {
+		var query = 'SELECT chats.chat_id, chats.user1, chats.user2, messages.body, messages.time \
+					 FROM chats \
+					 LEFT JOIN messages \
+					 ON chats.newest_msg = messages.message_id \
+					 WHERE (chats.newest_msg<>$1) \
+					 AND (chats.user1=$2 OR chats.user2=$2) \
+					 ORDER BY messages.time DESC';
+		conn.query(query, [-1, me], function(err, data) {
 			if (err) {
 				console.error(err);
 			} else {
 				var render_data = {
 					"myUsername": me,
 					"theirUsername": them,
-					"chats": getChats(me, data.rows)
+					"chats": getChatTimes(getChats(me, data.rows))
 				};
+				console.log(data.rows);
 				getChat(req, res, next, me, them, data.rows, render_data);
 			}
 		});
@@ -317,24 +331,28 @@ app.get('/chats/:user', function(req, res, next) {
 });
 
 function getChat(req, res, next, user1, user2, data, render_data) {
-	var chatID = chatExists(user2, render_data.chats);
-	if (chatID != -1) {
-		render_data.chat_id = data[chatID].chat_id;
-		getMessages(req, res, next, user1, user2, render_data);
-	} else {
-		addChat(req, res, next, user1, user2, render_data);
-	}
+    var query = 'SELECT chat_id FROM chats WHERE (user1=$1 AND user2=$2) OR (user1=$2 AND user2=$1)';
+    conn.query(query, [user1, user2], function(err, data) {
+    	if (err) {
+    		console.error(err);
+    	} else {
+    		if (data.length === 0) {
+    			addChat(req, res, next, user1, user2, render_data);
+    		} else {
+    			render_data.chat_id = data.rows[0].chat_id;
+				getMessages(req, res, next, user1, user2, render_data);
+    		}
+    	}
+    });
 }
 
-function chatExists(name, chats) {
-    var i;
-    for (i = 0; i < chats.length; i++) {
-        if (chats[i].username === name) {
-            return i;
-        }
-    }
-
-    return -1;
+function getChatTimes(chats) {
+	chats.forEach(function(chat, index, array) {
+		var time = new Date(chat.time);
+		var timestamp = time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+		chat.timestamp = timestamp;
+	});
+	return chats;
 }
 
 function addChat(req, res, next, user1, user2, render_data) {
@@ -429,10 +447,10 @@ app.post('/search/result', getSelectedUsers);
 
 
 // save message
-app.post('/chats/save', saveMessage);
+// app.post('/chats/save', saveMessage);
 
 // edit message
-app.post('/chats/edit', editMessage);
+// app.post('/chats/edit', editMessage);
 
 // correct message
 // app.post('/chats/correct', correctMessage);
@@ -607,22 +625,22 @@ function logoutUser(req, res, next) {
 	});
 }
 
-function saveMessage(req, res, next) {
-	console.log("saving");
-	var message_body = req.body.message;
-	var time = req.body.time;
-	var sender = req.body.sender;
-	var receiver = req.body.receiver;
+// function saveMessage(req, res, next) {
+// 	console.log("saving");
+// 	var message_body = req.body.message;
+// 	var time = req.body.time;
+// 	var sender = req.body.sender;
+// 	var receiver = req.body.receiver;
 
-	conn.query('INSERT INTO messages (sender, receiver, body, time, correction, translation) VALUES($1, $2, $3, $4, $5, $6)', [sender, receiver, message_body, time, "", ""], function(error, data) {
-		if (error) {
-			console.error('ERROR: could not add message to table');
-		}
-		console.log(345);
-		console.log(message_body);
-		console.log(sender);
-	});
-}
+// 	conn.query('INSERT INTO messages (sender, receiver, body, time, correction, translation) VALUES($1, $2, $3, $4, $5, $6)', [sender, receiver, message_body, time, "", ""], function(error, data) {
+// 		if (error) {
+// 			console.error('ERROR: could not add message to table');
+// 		}
+// 		console.log(345);
+// 		console.log(message_body);
+// 		console.log(sender);
+// 	});
+// }
 
 
 function editMessage(val) {
@@ -684,10 +702,27 @@ function saveMessage(val) {
 	var time = val.time;
 	var sender = val.sender;
 	var receiver = val.receiver;
+	var m_id;
+	var query = 'INSERT INTO messages (sender, receiver, body, time, correction, translation) VALUES($1, $2, $3, $4, $5, $6)';
 
-	conn.query('INSERT INTO messages (sender, receiver, body, time, correction, translation) VALUES($1, $2, $3, $4, $5, $6)', [sender, receiver, message_body, time, "", ""], function(error, data) {
+	conn.query(query, [sender, receiver, message_body, time, "", ""], function(error, data) {
 		if (error) {
 			console.error('ERROR: could not add message to table');
+		} else {
+			query = 'SELECT message_id FROM messages WHERE body=$1';
+			conn.query(query, [message_body], function(err, data) {
+				if (err) {
+					console.error('ERROR: counot find message ID ' + err);
+				} else {
+					m_id = data.rows[0].message_id;
+					query = 'UPDATE chats SET newest_msg=$1 WHERE (user1=$2 AND user2=$3) OR (user1=$3 AND user2=$2)';
+					conn.query(query, [m_id, sender, receiver], function(err, data) {
+						if (err) {
+							console.error('ERROR: could not update ' + err);
+						}
+					});
+				}
+			});
 		}
 	});
 }
