@@ -334,7 +334,7 @@ function getChat(req, res, next, user1, user2, data, render_data) {
     	if (err) {
     		console.error(err);
     	} else {
-    		if (data.length === 0) {
+    		if (data.rows.length == 0) {
     			addChat(req, res, next, user1, user2, render_data);
     		} else {
     			render_data.chat_id = data.rows[0].chat_id;
