@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	var pathname = window.location.pathname.split( '/' );
 
-	if (pathname.length == 3) {
+	if (pathname.length == 3 && pathname[1] !== "s") {
 		console.log(pathname[2]);
 		var current_name = '#' + pathname[2];
 		$(current_name).addClass("current");
