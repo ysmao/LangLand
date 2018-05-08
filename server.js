@@ -395,22 +395,24 @@ app.get('/s/', async function(req, res, next) {
     let min_age = req.query.min_age;
     var max_age = req.query.max_age;
     var native_lang = req.query.native_lang;
+    var min_proficiency = req.query.min_proficiency;
+    var max_proficiency = req.query.max_proficiency;
 	var query = 'SELECT username, birthdate, gender FROM users WHERE username LIKE $1';
 
 	var list = [username];
 
 	if (native_lang==="Chinese"||native_lang==="English"){
 		console.log("native not null");
-		query = 'SELECT users.username, birthdate, gender FROM users INNER JOIN languages ON users.username=languages.username WHERE users.username LIKE $1 AND languages.native=1 AND languages.language=$2';
-		list=[username, native_lang];
+		query = 'SELECT users.username, birthdate, gender FROM users INNER JOIN languages ON users.username=languages.username WHERE users.username LIKE $1 AND languages.native=1 AND languages.language=$2 AND languages.proficiency>=$3 AND languages.proficiency<=$4';
+		//list=[username, native_lang, min_proficiency, max_proficiency];
 
 		//if((min_age!=-1)&&(max_age!=-1)){
 			var min_date = (2018-min_age).toString() + '-05-08';
 			var max_date = (2018-max_age).toString() + '-05-08';
 			console.log(min_date);
 			console.log(max_date);
-			query = query + ' AND (users.birthdate>$3) AND (users.birthdate<$4)';
-			list=[username, native_lang, max_date, min_date];
+			query = query + ' AND (users.birthdate>$5) AND (users.birthdate<$6)';
+			list=[username, native_lang, min_proficiency, max_proficiency, max_date, min_date];
 		//}
 	}
 	else {//if((min_age!=-1)&&(max_age!=-1)){
