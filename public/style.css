@@ -842,6 +842,17 @@ a {
 	top: -17px;
 }
 
+#search_button {
+	margin-top: 20px;
+    border: none;
+    font-size: 24px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    background-color: #00394f;
+}
+
 /*
 ============================================ 
 		   	  RESULTS DISPLAY
