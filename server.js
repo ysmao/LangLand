@@ -263,7 +263,7 @@ function getUserInfo(req, res, next, user, render_data) {
 app.get('/chats', function(req, res, next) {
 	var me = req.session.username;
 	if (me) {
-		var query = 'SELECT chats.user1, chats.user2, messages.body, messages.time \
+		var query = 'SELECT chats.user1, chats.user2, messages.body, messages.time, messages.correction \
 					 FROM chats \
 					 LEFT JOIN messages \
 					 ON chats.newest_msg = messages.message_id \
@@ -305,7 +305,7 @@ app.get('/chats/:user', function(req, res, next) {
 	var me = req.session.username;
 	if (me) {
 		var them = req.params.user;
-		var query = 'SELECT chats.chat_id, chats.user1, chats.user2, messages.body, messages.time \
+		var query = 'SELECT chats.chat_id, chats.user1, chats.user2, messages.body, messages.time, messages.correction \
 					 FROM chats \
 					 LEFT JOIN messages \
 					 ON chats.newest_msg = messages.message_id \
@@ -672,15 +672,30 @@ function editMessage1(val, orig_msg) {
 	var sender = val.sender;
 	var receiver = val.receiver;
 	var id = val.m_id;
+	var m_id;
 	//res.json(data.rows);
 	console.log(orig_msg);
 	console.log(correction);
 
-	var q = 'INSERT INTO messages (sender, receiver, body, time, correction, translation) VALUES($1, $2, $3, $4, $5, $6)';
-	conn.query(q, [sender, receiver, orig_msg, time, correction, ""], function(error, data) {
+	var query = 'INSERT INTO messages (sender, receiver, body, time, correction, translation) VALUES($1, $2, $3, $4, $5, $6)';
+	conn.query(query, [sender, receiver, orig_msg, time, correction, ""], function(error, data) {
 		if (error) {
 			console.error('ERROR: could not add edited message to table');
 		} else {
+			query = 'SELECT message_id FROM messages WHERE correction=$1';
+			conn.query(query, [correction], function(err, data) {
+				if (err) {
+					console.error('ERROR: counot find message ID ' + err);
+				} else {
+					m_id = data.rows[0].message_id;
+					query = 'UPDATE chats SET newest_msg=$1 WHERE (user1=$2 AND user2=$3) OR (user1=$3 AND user2=$2)';
+					conn.query(query, [m_id, sender, receiver], function(err, data) {
+						if (err) {
+							console.error('ERROR: could not update ' + err);
+						}
+					});
+				}
+			});
 			val.correction = val.message;
 			delete val.message;
 			val.orig_msg = orig_msg;

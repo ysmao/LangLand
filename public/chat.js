@@ -38,6 +38,10 @@ $(document).ready(function() {
 		}
 	});
 
+	socket.on("chat update", function(val) {
+		console.log(val);
+	});
+
 	$('#chat_content').on('click', '.edit_button', function() {
 		editing = true;
 

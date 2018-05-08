@@ -34,7 +34,11 @@
 				<div class="tab_content selected" id="chats_tab_content">
 					<ul id="chats_list">
 						{{#each chats as |name|}}
-							{{> chat friendName=name.username me=myUsername time=name.timestamp preview=name.body}}
+							{{#if name.correction}}
+								{{> chat friendName=name.username me=myUsername time=name.timestamp preview=name.correction}}
+							{{else}}
+								{{> chat friendName=name.username me=myUsername time=name.timestamp preview=name.body}}
+							{{/if}}
 						{{/each}}
 					</ul>
 				</div>
