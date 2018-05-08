@@ -405,6 +405,10 @@ a {
 	border-radius: 50px;
 }
 
+.chat_preview_text {
+	width: 263px;
+}
+
 .chat_info {
 	display: flex;
 	justify-content: space-between;
@@ -415,6 +419,16 @@ a {
 	font-size: 18px;
 
 	color: #E1E8EC;
+}
+
+.preview {
+	height: 22px;
+	width: inherit;
+	display: inline-block;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 /*
