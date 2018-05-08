@@ -10,7 +10,7 @@ var otherPerson;
 
 $(document).ready(function() {
 	editing = false;
-	me = $('#message_sender').val();
+	me = $('#myUsername').val();
 	var pathname = window.location.pathname.split( '/' );
 	otherPerson = pathname[2];
 
@@ -46,10 +46,6 @@ $(document).ready(function() {
 		} else if (val.sender == otherPerson && val.receiver == me) {
 			addYourCorrectedMessage(val);
 		}
-	});
-
-	socket.on("chatlist update", function(val) {
-		console.log(val);
 	});
 
 	$('#chat_content').on('click', '.edit_button', function() {
@@ -110,7 +106,9 @@ $(document).ready(function() {
 	// });
 
 	var chat = document.getElementById("chat_display");
-	chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+	if (chat) {
+		chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+	}
 });
 
 function setSubmit() {

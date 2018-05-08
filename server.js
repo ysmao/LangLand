@@ -278,7 +278,6 @@ app.get('/chats', function(req, res, next) {
 					"myUsername": me,
 					"chats": getChatTimes(getChats(me, data.rows))
 				};
-				// console.log(data.rows);
 				res.render('chats', render_data);
 			}
 		});
@@ -321,7 +320,6 @@ app.get('/chats/:user', function(req, res, next) {
 					"theirUsername": them,
 					"chats": getChatTimes(getChats(me, data.rows))
 				};
-				console.log(data.rows);
 				getChat(req, res, next, me, them, data.rows, render_data);
 			}
 		});
@@ -813,10 +811,8 @@ function sendCorrection(val) {
 // 	});
 // }
 
-console.log(100);
 io.sockets.on('connection', function(socket) {
 	socket.on('join', function(nickname, callback) {
-		//socket.join(roomName);
 		socket.nickname = nickname;
 		conn.query('SELECT * FROM chats WHERE user1=$1 OR user2=$1', [nickname], function(error, data) {
 			if (error) {
