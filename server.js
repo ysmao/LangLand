@@ -403,7 +403,27 @@ app.get('/s/', async function(req, res, next) {
 		console.log("native not null");
 		query = 'SELECT users.username, birthdate, gender FROM users INNER JOIN languages ON users.username=languages.username WHERE users.username LIKE $1 AND languages.native=1 AND languages.language=$2';
 		list=[username, native_lang];
+
+		//if((min_age!=-1)&&(max_age!=-1)){
+			var min_date = (2018-min_age).toString() + '-05-08';
+			var max_date = (2018-max_age).toString() + '-05-08';
+			console.log(min_date);
+			console.log(max_date);
+			query = query + ' AND (users.birthdate>$3) AND (users.birthdate<$4)';
+			list=[username, native_lang, max_date, min_date];
+		//}
 	}
+	else {//if((min_age!=-1)&&(max_age!=-1)){
+		var min_date = (2018-min_age).toString() + '-05-08';
+		var max_date = (2018-max_age).toString() + '-05-08';
+		console.log(min_date);
+		console.log(max_date);
+		query = query + ' AND (birthdate>$2) AND (birthdate<$3)';
+		list=[username,max_date,min_date];
+	}
+	// query=query+' AND (julianday($2) - julianday(birthdate) < $3)';
+	// quer = 'SELECT username, birthdate, gender FROM users WHERE username LIKE $1 AND (strftime('%Y',Date($2)) - strftime('%Y',birthdate)<$3)';
+	// var list = [username, 'now', max_age];
 
 	conn.query(query, list, function(err, data) {
 		if (err) {
