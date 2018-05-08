@@ -9,7 +9,7 @@ $(document).ready(function() {
 
 	if (pathname[1] === "chats" || pathname[1] === "friends") {
 		$('#chfr_link').addClass("current_link");
-	} else if (pathname[1] === "search") {
+	} else if (pathname[1] === "search" || pathname[1] === "s") {
 		$('#search_link').addClass("current_link");
 	}
 });

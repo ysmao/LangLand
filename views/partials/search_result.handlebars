@@ -1,7 +1,9 @@
 <li class="search_result">
-	<img class="avatar" src="/placeholder.png" alt="{{user.username}}" width="124px" height="124px">
+	<a href="/friends/{{user.username}}">
+		<img class="avatar" src="/placeholder.png" alt="{{user.username}}" width="124px" height="124px">
+	</a>
 	<div class="result_text">
-		<h1>{{user.username}}</h1>
+		<a href="/friends/{{user.username}}"><h1>{{user.username}}</h1></a>
 		<ul class="lang_results">
 			{{#each user.languages as |lang|}}
 				{{result_language lang}}
