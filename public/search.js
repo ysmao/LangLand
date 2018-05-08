@@ -32,7 +32,7 @@ $(document).ready(function() {
 			}
 			if(!max_age){
 				console.log(3444);
-				max_age=-1;
+				max_age=300;
 			}
 			window.location.href='http://localhost:8080/s/?prefix='+username+'&min_age='+min_age+'&max_age='+max_age+'&native_lang='+native_lang;
 			console.log(min_age);
