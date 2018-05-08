@@ -229,6 +229,7 @@ a {
 .pseudolink {
 	color: #095e7e;
 	text-decoration: underline;
+	cursor: pointer;
 }
 
 /*
@@ -506,8 +507,13 @@ a {
 	border-radius: 7px;
 }
 
-.chat_button, .edit_link {
-	float: right;
+.profile_container {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.profile_container a {
+	display: inline-block;
 }
 
 .edit_link {
@@ -519,6 +525,7 @@ a {
 .chat_button {
 	width: 100px;
 	height: 50px;
+	cursor: pointer;
 
 	margin-top: 25px;
 

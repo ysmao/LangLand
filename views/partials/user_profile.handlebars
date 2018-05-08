@@ -1,5 +1,5 @@
 {{#equal me user.username}}
-	<div class="edit_profile_container">
+	<div class="profile_container">
 		<a href="#" class="edit_link">edit profile</a>
 	</div>
 {{/equal}}
@@ -30,7 +30,7 @@
 
 {{#equal me user.username}}
 {{else}}
-	<div class="chat_button_container">
+	<div class="profile_container">
 		<a href="/chats/{{user.username}}">
 			<button class="chat_button">Chat</button>
 		</a>
