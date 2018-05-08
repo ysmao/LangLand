@@ -6,6 +6,12 @@ $(document).ready(function() {
 		var current_name = '#' + pathname[2];
 		$(current_name).addClass("current");
 	}
+
+	if (pathname[1] === "chats" || pathname[1] === "friends") {
+		$('#chfr_link').addClass("current_link");
+	} else if (pathname[1] === "search") {
+		$('#search_link').addClass("current_link");
+	}
 });
 
 function logOut(event) {

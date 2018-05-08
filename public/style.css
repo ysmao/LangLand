@@ -267,7 +267,7 @@ a {
 	font-size: 32px;
 }
 
-.nav_links a {
+.nav_link {
 	height: 40px;
 
 	display: flex;
