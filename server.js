@@ -349,7 +349,7 @@ function getChat(req, res, next, user1, user2, data, render_data) {
 function getChatTimes(chats) {
 	chats.forEach(function(chat, index, array) {
 		var time = new Date(chat.time);
-		var timestamp = time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+		var timestamp = time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true});
 		chat.timestamp = timestamp;
 	});
 	return chats;

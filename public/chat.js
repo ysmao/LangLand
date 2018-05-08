@@ -6,8 +6,6 @@ var translate = false;
 var correct = false;
 var me;
 var otherPerson;
-// var anyDB = require('./server.js');
-// var conn = anyDB.createConnection('sqlite3://langland.db');
 
 
 $(document).ready(function() {
@@ -23,6 +21,12 @@ $(document).ready(function() {
 	});
 
 	socket.on("message", function(val) {
+		if (val.sender == me) {
+			updateChatList(val.receiver, val.time, val.message);
+		} else {
+			updateChatList(val.sender, val.time, val.message);
+		}
+
 		if (val.sender == me && val.receiver == otherPerson) {
 			addMyMessage(val);
 		} else if (val.sender == otherPerson && val.receiver == me) {
@@ -31,6 +35,12 @@ $(document).ready(function() {
 	});
 
 	socket.on("correction", function(val) {
+		if (val.sender == me) {
+			updateChatList(val.receiver, val.time, val.correction);
+		} else {
+			updateChatList(val.sender, val.time, val.correction);
+		}
+
 		if (val.sender == me && val.receiver == otherPerson) {
 			addMyCorrectedMessage(val);
 		} else if (val.sender == otherPerson && val.receiver == me) {
@@ -38,7 +48,7 @@ $(document).ready(function() {
 		}
 	});
 
-	socket.on("chat update", function(val) {
+	socket.on("chatlist update", function(val) {
 		console.log(val);
 	});
 
@@ -148,6 +158,7 @@ function setSubmit() {
 function addMyMessage(val) {
 	var chat = document.getElementById("chat_display");
 	var isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1;
+	console.log(val);
 
 	var first_li = '<li class="message my_message">';
 	var first_msg_content = '<div class="message_content" id="message_' + val.m_id + '">'
@@ -165,6 +176,7 @@ function addMyMessage(val) {
 function addYourMessage(val) {
 	var chat = document.getElementById("chat_display");
 	var isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1;
+	console.log(val);
 
 	var first_li = '<li class="message your_message">';
 	var img = '<img src="/placeholder.png" alt="' + val.sender + '" class="avatar">';
@@ -206,6 +218,7 @@ function addMyCorrectedMessage(val) {
 function addYourCorrectedMessage(val) {
 	var chat = document.getElementById("chat_display");
 	var isScrolledToBottom = chat.scrollHeight - chat.clientHeight <= chat.scrollTop + 1;
+	console.log(val);
 
 	var first_li = '<li class="message your_message">';
 	var img = '<img src="/placeholder.png" alt="' + val.sender + '" class="avatar">';
@@ -223,6 +236,26 @@ function addYourCorrectedMessage(val) {
 	}
 }
 
+function updateChatList(friendName, time, message) {
+	$('#' + friendName).remove();
+	var timestamp = new Date(time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true});
+
+	var chat = '<a href="/chats/' + friendName + '"> \
+					<li class="chat" id="' + friendName + '"> \
+						<img src="/placeholder.png" alt="' + friendName + '"> \
+						<div class="chat_preview_text"> \
+							<div class="chat_info"> \
+								<span class="friend_name">' + friendName + '</span> \
+								<span class="time">' + timestamp + '</span> \
+							</div> \
+							<span class="preview">' + message + '</span> \
+						</div> \
+					</li> \
+				</a>';
+
+	$('#chats_list').prepend(chat);
+}
+
 function correctMessage() {
 	correct = true;
 	translate = false;
@@ -231,6 +264,7 @@ function correctMessage() {
 	$('#message_box').val( $(msg_content_id).html());
 
 	$('#edit_modal').hide();
+	$('#message_box').focus();
 }
 
 function translateMessage() {
@@ -238,19 +272,5 @@ function translateMessage() {
 	correct = false;
 
 	$('#edit_modal').hide();
+	$('#message_box').focus();
 }
-
-// function editClick(event) {
-// 	editing =true;
-
-// 	edit_id = ($(this).attr('id'));
-// 	console.log($(this));
-
-// 	msg_content_id = '#message_' + edit_id;
-// 	console.log(msg_content_id);
-// 	console.log($(msg_content_id).html());
-
-// 	$("#edit_modal_content").css({top: event.pageY, left: event.pageX});
-
-// 	$('#edit_modal').show();
-// }
