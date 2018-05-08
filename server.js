@@ -389,56 +389,58 @@ function getMessages(req, res, next, user1, user2, render_data) {
 app.get('/search', getAllUsers);
 
 app.get('/s/', async function(req, res, next) {
-	console.log("seaaaaaaaaaaaaaaaaaarch");
+	if (req.session.username) {
+		let username = req.query.prefix + '%';
+	    let min_age = req.query.min_age;
+	    var max_age = req.query.max_age;
+	    var native_lang = req.query.native_lang;
+	    var min_proficiency = req.query.min_proficiency;
+	    var max_proficiency = req.query.max_proficiency;
+		var query = 'SELECT username, birthdate, gender FROM users WHERE username LIKE $1';
 
-    let username = req.query.prefix + '%';
-    let min_age = req.query.min_age;
-    var max_age = req.query.max_age;
-    var native_lang = req.query.native_lang;
-    var min_proficiency = req.query.min_proficiency;
-    var max_proficiency = req.query.max_proficiency;
-	var query = 'SELECT username, birthdate, gender FROM users WHERE username LIKE $1';
+		var list = [username];
 
-	var list = [username];
+		if (native_lang==="Chinese"||native_lang==="English"){
+			console.log("native not null");
+			query = 'SELECT users.username, birthdate, gender FROM users INNER JOIN languages ON users.username=languages.username WHERE users.username LIKE $1 AND languages.native=1 AND languages.language=$2 AND languages.proficiency>=$3 AND languages.proficiency<=$4';
+			//list=[username, native_lang, min_proficiency, max_proficiency];
 
-	if (native_lang==="Chinese"||native_lang==="English"){
-		console.log("native not null");
-		query = 'SELECT users.username, birthdate, gender FROM users INNER JOIN languages ON users.username=languages.username WHERE users.username LIKE $1 AND languages.native=1 AND languages.language=$2 AND languages.proficiency>=$3 AND languages.proficiency<=$4';
-		//list=[username, native_lang, min_proficiency, max_proficiency];
-
-		//if((min_age!=-1)&&(max_age!=-1)){
+			//if((min_age!=-1)&&(max_age!=-1)){
+				var min_date = (2018-min_age).toString() + '-05-08';
+				var max_date = (2018-max_age).toString() + '-05-08';
+				console.log(min_date);
+				console.log(max_date);
+				query = query + ' AND (users.birthdate>$5) AND (users.birthdate<$6)';
+				list=[username, native_lang, min_proficiency, max_proficiency, max_date, min_date];
+			//}
+		}
+		else {//if((min_age!=-1)&&(max_age!=-1)){
 			var min_date = (2018-min_age).toString() + '-05-08';
 			var max_date = (2018-max_age).toString() + '-05-08';
 			console.log(min_date);
 			console.log(max_date);
-			query = query + ' AND (users.birthdate>$5) AND (users.birthdate<$6)';
-			list=[username, native_lang, min_proficiency, max_proficiency, max_date, min_date];
-		//}
-	}
-	else {//if((min_age!=-1)&&(max_age!=-1)){
-		var min_date = (2018-min_age).toString() + '-05-08';
-		var max_date = (2018-max_age).toString() + '-05-08';
-		console.log(min_date);
-		console.log(max_date);
-		query = query + ' AND (birthdate>$2) AND (birthdate<$3)';
-		list=[username,max_date,min_date];
-	}
-	// query=query+' AND (julianday($2) - julianday(birthdate) < $3)';
-	// quer = 'SELECT username, birthdate, gender FROM users WHERE username LIKE $1 AND (strftime('%Y',Date($2)) - strftime('%Y',birthdate)<$3)';
-	// var list = [username, 'now', max_age];
-
-	conn.query(query, list, function(err, data) {
-		if (err) {
-			res.send("error");
-			console.error(err);
-		} else if (data.rows) {
-			console.log(data.rows);
-			getUserLangInfo(req, res, next, getUserAges(data.rows));
-		} else {
-			console.log("uhh");
-			res.send("failure");
+			query = query + ' AND (birthdate>$2) AND (birthdate<$3)';
+			list=[username,max_date,min_date];
 		}
-	});
+		// query=query+' AND (julianday($2) - julianday(birthdate) < $3)';
+		// quer = 'SELECT username, birthdate, gender FROM users WHERE username LIKE $1 AND (strftime('%Y',Date($2)) - strftime('%Y',birthdate)<$3)';
+		// var list = [username, 'now', max_age];
+
+		conn.query(query, list, function(err, data) {
+			if (err) {
+				res.send("error");
+				console.error(err);
+			} else if (data.rows) {
+				console.log(data.rows);
+				getUserLangInfo(req, res, next, getUserAges(data.rows));
+			} else {
+				console.log("uhh");
+				res.send("failure");
+			}
+		});
+	} else {
+		res.redirect('/');
+	}
 });
 
 app.get('/', function(req, res, next) {
